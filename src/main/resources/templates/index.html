@@ -70,7 +70,7 @@
             <else/>
             <foreach name='weibo' item='v'>
                 <if condition='!$v["isturn"]'>
-                    <!--====================普通微博样式====================-->
+                    <!--====================普通微博样式=========================-->
                     <div class="weibo">
                         <!--头像-->
                         <div class="face">
@@ -78,7 +78,7 @@
                                 <img src="
                         <if condition='$v["face"]'>
                                 __ROOT__/Uploads/Face/{$v.face}
-                                <else/>
+                                <els/>
                                 __PUBLIC__/Images/noface.gif
                 </if>" width='50' height='50'/>
                 </a>
