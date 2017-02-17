@@ -30,31 +30,6 @@ public class IndexController {
 
     @RequestMapping(path = {"/", "/index"}, method = {RequestMethod.GET, RequestMethod.POST})
     public String index(Model model) {
-        List<String> arr = new ArrayList<String>();
-        arr.add("A");
-        arr.add("B");
-        arr.add("C");
-
-       List<User> users= UserService.getUsers(0,10);
-
-        User user = UserService.getUserById(2);
-
-        //User user = UserService.getUserByAccount("lovepcl");
-
-        model.addAttribute("us",users);
-
-        //model.addAttribute("userss",user);
-
-        Map<String, String> map = new HashMap<>();
-        for (int i = 0; i < 4; ++i) {
-            map.put(String.valueOf(i), String.valueOf(i * i));
-        }
-        model.addAttribute("map", map);
-
-
-        model.addAttribute("arr",arr);
-        model.addAttribute("name","pengchaoling");
-        model.addAttribute("user", new User("pengchag"));
         return "index";
     }
 }

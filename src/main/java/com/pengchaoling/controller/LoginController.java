@@ -37,14 +37,15 @@ public class LoginController {
     /**
      * 注册表单处理
      */
-    @RequestMapping(path = {"/doRegister/"},method = {RequestMethod.POST})
+    @RequestMapping(path = {"/doRegister"},method = {RequestMethod.POST})
     public String doRegister(Model model, @RequestParam("account") String account,
+                      @RequestParam("nickname") String nickname,
                       @RequestParam("pwd") String pwd,
                       @RequestParam("pwded") String pwded,
                       @RequestParam(value="rememberme", defaultValue = "false") boolean rememberme,
                              HttpServletResponse response) {
         try {
-            Map<String, Object> map = userService.register(account, pwd,pwded);
+            Map<String, Object> map = userService.register(account,nickname,pwd,pwded);
             if (map.containsKey("ticket")) {
                 Cookie cookie = new Cookie("ticket", map.get("ticket").toString());
                 cookie.setPath("/");
@@ -82,7 +83,7 @@ public class LoginController {
     /**
      * 登录表单处理
      */
-    @RequestMapping(path = {"/doLogin/"}, method = {RequestMethod.POST})
+    @RequestMapping(path = {"/doLogin"}, method = {RequestMethod.POST})
     public String doLogin(Model model, @RequestParam("account") String account,
                         @RequestParam("password") String password,
                         @RequestParam(value="rememberme", defaultValue = "false") boolean rememberme,
@@ -115,12 +116,29 @@ public class LoginController {
     /**
      * 处理ajax验证account是否存在
      */
-    @RequestMapping(path = {"/checkAccount/"},method = {RequestMethod.POST})
+    @RequestMapping(path = {"/checkAccount"},method = {RequestMethod.POST})
     @ResponseBody
     public String checkAccount(@RequestParam("account") String account,
                              HttpServletResponse response) {
         //如果账号已存在，返回false
         User user = userService.getUserByAccount(account);
+        String res;
+        if(user == null)
+            res = "true";
+        else
+            res = "false";
+
+        return res;
+    }
+    /**
+     * 处理ajax验证nickname是否存在
+     */
+    @RequestMapping(path = {"/checkNickname"},method = {RequestMethod.POST})
+    @ResponseBody
+    public String checkNickname(@RequestParam("nickname") String nickname,
+                               HttpServletResponse response) {
+        //如果账号已存在，返回false
+        User user = userService.getUserByNickname(nickname);
         String res;
         if(user == null)
             res = "true";

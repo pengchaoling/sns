@@ -6,8 +6,8 @@
     <script type='text/javascript' src="../Js/jquery-1.7.2.min.js"></script>
     <script type='text/javascript' src="../Js/jquery-validate.js"></script>
     <script type='text/javascript'>
-		var checkAccount = "/checkAccount/";
-		var checkUname = "/checkUname/";
+		var checkAccount = "/checkAccount";
+		var checkNickname = "/checkNickname";
 		//var checkVerify = "{:U('checkVerify')}";
 	</script>
     <script type='text/javascript' src="../Js/register.js"></script>
@@ -15,7 +15,7 @@
 <body>
 <div id='logo'></div>
 <div id='reg-wrap'>
-    <form action="/doRegister/" method='post' name='register'>
+    <form action="/doRegister" method='post' name='register'>
         <fieldset>
             <legend>用户注册</legend>
             <p>
@@ -31,8 +31,8 @@
                 <input type="password" name='pwded' class='input'/>
             </p>
             <p>
-                <label for="uname">昵称：</label>
-                <input type="text"  name='uname' id='uname' class='input'/>
+                <label for="nickname">昵称：</label>
+                <input type="text"  name='nickname' id='nickname' class='input'/>
             </p>
             <!--
             <p>

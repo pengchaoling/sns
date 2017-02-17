@@ -2,9 +2,11 @@ package com.pengchaoling.interceptor;
 
 import com.pengchaoling.dao.LoginTicketDAO;
 import com.pengchaoling.dao.UserDAO;
+import com.pengchaoling.dao.UserInfoDAO;
 import com.pengchaoling.model.HostHolder;
 import com.pengchaoling.model.LoginTicket;
 import com.pengchaoling.model.User;
+import com.pengchaoling.model.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -31,6 +33,9 @@ public class PassportInterceptor implements HandlerInterceptor {
 
     @Autowired
     private HostHolder hostHolder;
+
+    @Autowired
+    private UserInfoDAO userInfoDAO;
 
     /**
      *  处理controller之前，会先调用
@@ -69,8 +74,11 @@ public class PassportInterceptor implements HandlerInterceptor {
      */
     @Override
     public void postHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, ModelAndView modelAndView) throws Exception {
-        if (modelAndView != null && hostHolder.getUser() != null) {
-            modelAndView.addObject("user", hostHolder.getUser());
+        User user = hostHolder.getUser();
+        if (modelAndView != null && user != null) {
+            UserInfo userInfo = userInfoDAO.selectUserInfoByUid(user.getId());
+            modelAndView.addObject("user", user);
+            modelAndView.addObject("userinfo",userInfo);
         }
     }
 

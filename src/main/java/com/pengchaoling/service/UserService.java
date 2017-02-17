@@ -4,6 +4,7 @@ import com.pengchaoling.dao.UserDAO;
 import com.pengchaoling.dao.LoginTicketDAO;
 import com.pengchaoling.model.LoginTicket;
 import com.pengchaoling.model.User;
+import com.pengchaoling.model.UserInfo;
 import com.pengchaoling.util.SnsUtil;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,8 @@ public class UserService {
     private UserDAO userDAO;
     @Autowired
     private LoginTicketDAO loginTicketDAO;
+    @Autowired
+    private UserInfoService userInfoService;
 
     public User getUserById(int id) {
         return userDAO.selectById(id);
@@ -32,6 +35,10 @@ public class UserService {
         return userDAO.selectByAccount(account);
     }
 
+    public User getUserByNickname(String nickname){
+        return userDAO.selectByNickname(nickname);
+    }
+
     public List<User> getUsers(int offset, int limit){
         return userDAO.selectUsers(offset, limit);
     }
@@ -39,10 +46,15 @@ public class UserService {
     /**
      * 注册验证以及注册完成
      */
-    public Map<String, Object> register(String account, String pwd,String pwded) {
+    public Map<String, Object> register(String account,String nickname, String pwd,String pwded) {
         Map<String, Object> map = new HashMap<String, Object>();
         if (StringUtils.isBlank(account)) {
             map.put("msg", "用户名不能为空");
+            return map;
+        }
+
+        if (StringUtils.isBlank(nickname)) {
+            map.put("msg", "昵称不能为空");
             return map;
         }
 
@@ -63,9 +75,15 @@ public class UserService {
             return map;
         }
 
+        User nick = userDAO.selectByNickname(nickname);
+        if(nick != null){
+            map.put("msg","该昵称已被人使用，换一个吧");
+        }
+
         // 设置用户信息，密码加盐
         user = new User();
         user.setAccount(account);
+        user.setNickname(nickname);
         user.setSalt(UUID.randomUUID().toString().substring(0, 5));
         user.setPassword(SnsUtil.MD5(pwd+user.getSalt()));
         Date date = new Date();
@@ -73,6 +91,8 @@ public class UserService {
         user.setRegistime(date);
         userDAO.addUser(user);
 
+        //设置useInfo
+        userInfoService.addDefaultUserInfo(nickname,user.getId());
 
         String ticket = addLoginTicket(user.getId());
         map.put("ticket", ticket);

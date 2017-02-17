@@ -45,22 +45,22 @@ $(function () {
 				required : true,
 				equalTo : "#pwd"
 			},
-			/*
-			uname : {
+
+			nickname : {
 				required : true,
 				rangelength : [2,10],
 				remote : {
-					url : checkUname,
+					url : checkNickname,
 					type : 'post',
 					dataType : 'json',
 					data : {
 						uname : function () {
-							return $('#uname').val();
+							return $('#nickname').val();
 						}
 					}
 				}
 			},
-
+            /*
 			verify : {
 				required : true,
 				remote : {
@@ -87,7 +87,7 @@ $(function () {
 				required : '请确认密码',
 				equalTo : '两次密码不一致'
 			},
-			uname : {
+			nickname : {
 				required : '请填写您的昵称',
 				rangelength : '昵称在2-10个字之间',
 				remote : '昵称已存在'

@@ -10,6 +10,7 @@ import java.util.Date;
 public class User {
     private int id;
     private String account;         //登陆账号
+    private String nickname;        //昵称
     private String password;        //密码
     private String salt;            //盐值（加盐字段）
     private Date registime;         //注册时间
@@ -28,6 +29,14 @@ public class User {
 
     public void setAccount(String account){
         this.account = account;
+    }
+
+    public String getNickname(){
+        return this.nickname;
+    }
+
+    public void setNickname(String nickname){
+        this.nickname = nickname;
     }
 
     public String getPassword(){

@@ -14,11 +14,11 @@ import java.util.List;
 public interface UserDAO {
     // 注意空格
     String TABLE_NAME = " user ";
-    String INSERT_FIELDS = " account, password, salt, registime ";
+    String INSERT_FIELDS = " account,nickname, password, salt, registime ";
     String SELECT_FIELDS = " id, " + INSERT_FIELDS;
 
     @Insert({"insert into ", TABLE_NAME, "(", INSERT_FIELDS,
-            ") values (#{account},#{password},#{salt},#{registime})"})
+            ") values (#{account},#{nickname},#{password},#{salt},#{registime})"})
     int addUser(User user);
 
     @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where id=#{id}"})
@@ -26,6 +26,9 @@ public interface UserDAO {
 
     @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where account=#{account}"})
     User selectByAccount(String account);
+
+    @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where nickname=#{nickname}"})
+    User selectByNickname(String nickname);
 
     @Update({"update ", TABLE_NAME, " set password=#{password} where id=#{id}"})
     void updatePassword(User user);

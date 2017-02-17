@@ -1,6 +1,5 @@
 <div id="right">
-    <div class="edit_tpl"><a href="" class='set_model'></a></div> 
-<userinfo id='$_SESSION["uid"]'>
+    <div class="edit_tpl"><a href="" class='set_model'></a></div>
     <dl class="user_face">
         <dt>
             <a href="{:U('/' . $uid)}">
@@ -8,17 +7,16 @@
             </a>
         </dt>
         <dd>
-            <a href="{:U('/' . $uid)}">{$username}</a>
+            <a href="{:U('/' . $uid)}">$!{userinfo.nickname}</a>
         </dd>
     </dl>
     <ul class='num_list'>
-        <li><a href="{:U('follow/' . $uid)}"><strong>{$follow}</strong><span>关注</span></a></li>
-        <li><a href="{:U('fans/' . $uid)}"><strong>{$fans}</strong><span>粉丝</span></a></li>
+        <li><a href="{:U('follow/' . $uid)}"><strong>$!{userinfo.follow}</strong><span>关注</span></a></li>
+        <li><a href="{:U('fans/' . $uid)}"><strong>$!{userinfo.fans}</strong><span>粉丝</span></a></li>
         <li class='noborder'>
-            <a href="{:U('/' . $uid)}"><strong>{$weibo}</strong><span>微博</span></a>
+            <a href="{:U('/' . $uid)}"><strong>$!{userinfo.weibo}</strong><span>微博</span></a>
         </li>
     </ul>
-</userinfo>
     <div class="maybe">
         <fieldset>
             
