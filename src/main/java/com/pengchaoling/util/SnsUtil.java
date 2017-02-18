@@ -1,17 +1,41 @@
 package com.pengchaoling.util;
-
+import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.security.MessageDigest;
+import java.util.Map;
 
 /**
  * Author: Lying
  * Data: 2017-02-15
- * description: 自定义函数库
+ * description: 依赖函数库
  */
 public class SnsUtil {
     private static final Logger logger = LoggerFactory.getLogger(SnsUtil.class);
+    public static int ANONYMOUS_USERID = 3;
+
+    public static String getJSONString(int status) {
+        JSONObject json = new JSONObject();
+        json.put("status", status);
+        return json.toJSONString();
+    }
+
+    public static String getJSONString(int status, String msg) {
+        JSONObject json = new JSONObject();
+        json.put("status", status);
+        json.put("msg", msg);
+        return json.toJSONString();
+    }
+
+    public static String getJSONString(int status, Map<String, String> map) {
+        JSONObject json = new JSONObject();
+        json.put("status", status);
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            json.put(entry.getKey(), entry.getValue());
+        }
+        return json.toJSONString();
+    }
 
     public static String MD5(String key) {
         char hexDigits[] = {

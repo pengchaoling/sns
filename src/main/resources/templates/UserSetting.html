@@ -9,14 +9,13 @@
 <script type='text/javascript' src='../Js/edit.js'></script>
 <script type="text/javascript" src='../Uploadify/jquery.uploadify.min.js'></script>
 <script type="text/javascript" src='../Js/jquery-validate.js'></script>
-
 <script type='text/javascript'>
-        var address = "{$user.location}";
-        var constellation = "{$user.constellation}";
-        var PUBLIC = '__PUBLIC__';
-        var uploadUrl = '{:U("Common/uploadFace")}';
-        var sid = '{:session_id()}';
-        var ROOT = '__ROOT__';
+        var address = "$!{user.location}";
+        var constellation = "$!{user.constellation}";
+        var PUBLIC = '..';
+        var uploadUrl = '/UploadFile/UploodFace';
+        var sid = '$!{user.id}';
+        var ROOT = '/img/';
     </script>
 <!--==========顶部固定导行条==========-->
 #parse("./common/nav.html")
@@ -86,12 +85,12 @@
             </form>
         </div>
         <div class='form hidden'>
-            <form action="{:U('editFace')}" method='post'>
+            <form action="/editFace" method='post'>
                 <div class='edit-face'>
                     <img src="
 
-                    #if($!userinfo.face180 != null)
-                    __ROOT__/Uploads/Face/{$user.face180}
+                    #if($!userinfo.face180)
+                    /img/$!{userinfo.face180}
                     #else
                     ../Images/noface.gif
                      #end" width='180' height='180' id='face-img'/>

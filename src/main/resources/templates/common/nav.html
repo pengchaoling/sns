@@ -23,7 +23,7 @@
                     </form>
                 </div>
                 <div class="user fleft">
-                    <a href="{:U('/' . session('uid'))}">$!{user.nickname}</a>
+                    <a href="/profile/$!{user.id}">$!{user.nickname}</a>
                 </div>
                 <ul class='top_right fleft'>
                     <li title='快速发微博' class='fast_send'><i class='icon icon-write'></i></li>
@@ -65,7 +65,7 @@
 <!--==========顶部固定导行条==========-->
 <!--==========加关注弹出框==========-->
 
-<?php 
+<?php
     $group = M('group')->where(array('uid' => session('uid')))->select();
 ?>
     <script type='text/javascript'>

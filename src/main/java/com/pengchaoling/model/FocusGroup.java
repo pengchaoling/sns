@@ -7,7 +7,7 @@ import java.util.Date;
  * Data: 2017-02-17
  * description: 关注用户分组
  */
-public class Group {
+public class FocusGroup {
     private int id;
     private String name;
     private int uid;

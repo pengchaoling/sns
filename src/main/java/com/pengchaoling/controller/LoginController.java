@@ -119,7 +119,7 @@ public class LoginController {
     @RequestMapping(path = {"/checkAccount"},method = {RequestMethod.POST})
     @ResponseBody
     public String checkAccount(@RequestParam("account") String account,
-                             HttpServletResponse response) {
+                           HttpServletResponse response) {
         //如果账号已存在，返回false
         User user = userService.getUserByAccount(account);
         String res;

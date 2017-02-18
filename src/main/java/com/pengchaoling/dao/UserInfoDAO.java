@@ -28,4 +28,7 @@ public interface UserInfoDAO {
     @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where nickname=#{nickname}"})
     UserInfo selectUserInfoByNickname(String nickname);
 
+    @Update({"update ", TABLE_NAME, " set face50=#{face50},face80=#{face80},face180=#{face180} where uid=#{uid}"})
+    void updateFace(UserInfo userinfo);
+
 }

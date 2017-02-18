@@ -1,20 +1,16 @@
 package com.pengchaoling.controller;
 
-import com.pengchaoling.model.User;
-import com.pengchaoling.model.ViewObject;
+import com.pengchaoling.model.FocusGroup;
+import com.pengchaoling.model.HostHolder;
+import com.pengchaoling.service.FocusGroupService;
 import com.pengchaoling.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Author: Lying
@@ -26,10 +22,19 @@ public class IndexController {
     @Autowired
     UserService UserService;
 
+    @Autowired
+    FocusGroupService focusGroupService;
+
+    @Autowired
+    HostHolder hostHolder;
 
 
     @RequestMapping(path = {"/", "/index"}, method = {RequestMethod.GET, RequestMethod.POST})
     public String index(Model model) {
+        //获取用户分组
+        List<FocusGroup> focusGroups = focusGroupService.selectFocusGroupsByUid(hostHolder.getUser().getId());
+
+        model.addAttribute("focusGroups",focusGroups);
         return "index";
     }
 }

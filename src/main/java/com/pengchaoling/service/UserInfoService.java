@@ -46,4 +46,15 @@ public class UserInfoService {
         userInfoDAO.addUserInfo(userInfo);
 
     }
+    /**
+     * 修改用户头像
+     */
+    public void updateFace(String face50,String face80,String face180,int uid){
+        UserInfo userInfo = new UserInfo();
+        userInfo.setFace50(face50);
+        userInfo.setFace80(face80);
+        userInfo.setFace180(face180);
+        userInfo.setUid(uid);
+        userInfoDAO.updateFace(userInfo);
+    }
 }
