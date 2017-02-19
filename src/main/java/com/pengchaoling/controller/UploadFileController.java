@@ -36,6 +36,8 @@ public class UploadFileController {
 
     private String FacePath = fileRootPath + "face//";  //头像保存地址
 
+    private String PicPath = fileRootPath + "weibo//";  //微博图片保存地址
+
     /**
      * 前台自动载入上传的文件
      * @param filename
@@ -55,7 +57,7 @@ public class UploadFileController {
     /**
      *  ajax头像上传，生成三种尺寸的头像
      */
-    @RequestMapping(value="/UploadFile/UploodFace",method={RequestMethod.POST})
+    @RequestMapping(value="/UploadFile/UploadFace",method={RequestMethod.POST})
     @ResponseBody
     public String faceUpload(@RequestParam("Filedata")MultipartFile Filedata){
 
@@ -66,9 +68,9 @@ public class UploadFileController {
 
                 String tempName = UUID.randomUUID().toString().replaceAll("-", "");
                 String filename = Filedata.getOriginalFilename();
-                createPreviewImage(Filedata.getInputStream(),tempName+"_50.jpg",50);
-                createPreviewImage(Filedata.getInputStream(),tempName+"_80.jpg",80);
-                createPreviewImage(Filedata.getInputStream(),tempName+"_180.jpg",180);
+                createPreviewImage(Filedata.getInputStream(),tempName+"_50.jpg",50,false,FacePath);
+                createPreviewImage(Filedata.getInputStream(),tempName+"_80.jpg",80,false,FacePath);
+                createPreviewImage(Filedata.getInputStream(),tempName+"_180.jpg",180,false,FacePath);
 
                 map.put("mini","face/"+tempName+"_50.jpg");
                 map.put("medium","face/"+tempName+"_80.jpg");
@@ -90,27 +92,70 @@ public class UploadFileController {
         }
 
     }
+    /**
+     * 微博内容插入的图片上传
+     */
+    @RequestMapping(value="/UploadFile/UploadPic",method={RequestMethod.POST})
+    @ResponseBody
+    public String UploadPic(@RequestParam("Filedata")MultipartFile Filedata){
+
+        Map<String,String> map = new HashMap<String,String>();
+        if(!Filedata.isEmpty()){
+
+            try {
+                String tempName = UUID.randomUUID().toString().replaceAll("-", "");
+                String filename = Filedata.getOriginalFilename();
+                createPreviewImage(Filedata.getInputStream(),tempName+"_800.jpg",800,true,PicPath);
+                createPreviewImage(Filedata.getInputStream(),tempName+"_380.jpg",380,true,PicPath);
+                createPreviewImage(Filedata.getInputStream(),tempName+"_120.jpg",120,true,PicPath);
+
+                map.put("mini","weibo/"+tempName+"_120.jpg");
+                map.put("medium","weibo/"+tempName+"_380.jpg");
+                map.put("max","weibo/"+tempName+"_800.jpg");
+
+            } catch (FileNotFoundException e) {
+                logger.error(e.getMessage());
+                SnsUtil.getJSONString(0, "找不到文件");
+            } catch (IOException e) {
+                logger.error(e.getMessage());
+                return SnsUtil.getJSONString(0,"IO错误");
+            }
+
+            return SnsUtil.getJSONString(1,map);
+
+        }else{
+            logger.error("文件为空");
+            return SnsUtil.getJSONString(0,"文件为空");
+        }
+
+    }
 
     /**
-     * 头像上传 生成不同尺寸的缩略图
+     *
+     * @param input
+     * @param filename      保存文件名称
+     * @param size          缩略图大小（只需指定一个）
+     * @param ratio         是否等比例压缩
+     * @throws IOException
      */
-    public void createPreviewImage(InputStream input, String filename, int size) throws IOException {
-        File fo = new File(FacePath+filename); // 目标图片
+    public void createPreviewImage(InputStream input, String filename, int size,boolean ratio,String path) throws IOException {
+        File fo = new File(path+filename); // 目标图片
         BufferedImage bis = ImageIO.read(input);  //原始图片
-        int nw =size;                        //图片缩放后的大小
-        int nh =size;
-        /*
-        //缩略图的标准 为  120*120（等比例缩放）
-        if ( (double)w / h < 1 ){
-            nh = 120;
-            nw = nh*w/h;
-        }else {
-            nw = 120;
-            nh = nw*h/w;
-        }*/
+        int width = bis.getWidth();     //图片原始大小
+        int height = bis.getHeight();
+        int newWidth,newHeight;         //压缩后图片宽高
+        if(ratio){
+            //等比例压缩，高度随宽度改变
+            newWidth = size;
+            newHeight = newWidth*height/width;
+        }else{
+            //强制压缩，用用头像处理，宽高都一样
+            newWidth=newHeight=size;
+        }
 
-        BufferedImage _image = new BufferedImage(nw, nh,BufferedImage.TYPE_INT_RGB);
-        _image.getGraphics().drawImage(bis, 0, 0, nw, nh, null); //绘制缩小后的图
+
+        BufferedImage _image = new BufferedImage(newWidth, newHeight,BufferedImage.TYPE_INT_RGB);
+        _image.getGraphics().drawImage(bis, 0, 0, newWidth, newHeight, null); //绘制缩小后的图
         FileOutputStream newimageout = new FileOutputStream(fo); //输出到文件流
         JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(newimageout);
         encoder.encode(_image); //近JPEG编码

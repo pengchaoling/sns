@@ -1,6 +1,5 @@
 package com.pengchaoling.dao;
 
-import com.pengchaoling.model.User;
 import com.pengchaoling.model.UserInfo;
 import org.apache.ibatis.annotations.*;
 
@@ -30,5 +29,12 @@ public interface UserInfoDAO {
 
     @Update({"update ", TABLE_NAME, " set face50=#{face50},face80=#{face80},face180=#{face180} where uid=#{uid}"})
     void updateFace(UserInfo userinfo);
+
+    //字段加一
+    @Update({"update ", TABLE_NAME, " set weibo=weibo+1 where uid=#{uid}"})
+    void IncWeibo(int uid);
+
+
+
 
 }

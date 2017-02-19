@@ -9,10 +9,9 @@
 <script type='text/javascript' src='../Js/nav.js'></script>
 <script type='text/javascript' src='../Js/index.js'></script>
 <script type='text/javascript'>
-        var PUBLIC = '__PUBLIC__';
-        var uploadUrl = '{:U("Common/uploadPic")}';
-        var sid = '{:session_id()}';
-        var ROOT = '__ROOT__';
+        var PUBLIC = '..';
+        var uploadUrl = '/UploadFile/UploadPic';
+        var ROOT = '/img/';
         var commentUrl = "{:U('Index/comment')}";
         var getComment = '{:U("Index/getComment")}';
         var keepUrl = '{:U("Index/keep")}';
@@ -27,41 +26,41 @@
     <div class='info-list'>
         <div class='info-face'>
             <p>
-                <img src="<if condition='$userinfo["face180"]'>__ROOT__/Uploads/Face/{$userinfo.face180}<else/>__PUBLIC__/Images/noface.gif</if>" width='180' height='180' alt="{$userinfo.username}" />
+                <img src="#if("$!profile.face180" != "")/img/$!{profile.face180} #else ../Images/noface.gif #end" width='180' height='180' id='face-img' alt="$!{profile.nickname}"/>
             </p>
             <ul>
                 <li>
                     <a href="{:U('follow/' . $userinfo['uid'])}">
-                        <strong>{$userinfo.follow}</strong><br/>关注
+                        <strong>$!{profile.follow}</strong><br/>关注
                     </a>
                 </li>
                 <li>
                     <a href="{:U('fans/' . $userinfo['uid'])}">
-                        <strong>{$userinfo.fans}</strong><br/>粉丝
+                        <strong>$!{profile.fans}</strong><br/>粉丝
                     </a>
                 </li>
                 <li>
                     <a href="{:U('/' . $userinfo['uid'])}">
-                        <strong>{$userinfo.weibo}</strong><br/>微博
+                        <strong>$!{profile.weibo}</strong><br/>微博
                     </a>
                 </li>
             </ul>
         </div>
         <ul class='uinfo'>
-            <li class='uname full'>{$userinfo.username}</li>
-            <li class='uintro full'>{$userinfo.intro}</li>
+            <li class='uname full'>$!{profile.nickname}</li>
+            <li class='uintro full'>$!{profile.intro}</li>
             <li class='ulist full'>
                 <ul>
-                    <li><i class='icon icon-<if condition="$userinfo['sex'] eq '男'">boy<else/>girl</if>'></i></li>
-                    <li>{$userinfo.location}</li>
-                    <li class='nobr'>{$userinfo.constellation}</li>
+                    <li><i class='icon #if($profile.sex==1)icon-boy #else icon-girl #end'></i></li>
+                    <li>$!{profile.location}</li>
+                    <li class='nobr'>$!{profile.constellation}</li>
                 </ul>
             </li>
-            <if condition='isset($_SESSION["uid"]) && $_SESSION["uid"] == $_GET["id"]'>
+            #if($!user.id == $!profile.uid)
                 <li class='uedit full'>
-                    <a href="{:U('UserSetting/index')}">修改个人资料</a>
+                    <a href="/userSetting">修改个人资料</a>
                 </li>
-            </if>
+            #end
         </ul>
     </div>
 </div>
@@ -69,14 +68,14 @@
     <!--=====左侧=====-->
     <div id="middle" class='fleft'>
         <!--微博发布框-->
-        <if condition='isset($_SESSION["uid"]) && $_SESSION["uid"] == $_GET["id"]'>
+        #if($!user.id == $!profile.uid)
             <div class='send_wrap'>
                 <div class='send_title fleft'></div>
                 <div class='send_prompt fright'>
                     <span>你还可以输入<span id='send_num'>140</span>个字</span>
                 </div>
                 <div class='send_write'>
-                    <form action='{:U("Index/sendWeibo")}' method='post' name='weibo'>
+                    <form action='/weiboSend' method='post' name='weibo'>
                         <textarea sign='weibo' name='content'></textarea>
                         <span class='ta_right'></span>
                         <div class='send_tool'>
@@ -106,7 +105,7 @@
                     </form>
                 </div>
             </div>
-        </if>
+        #end
         <!--微博发布框-->
         <div class='view_line'>
             <strong>微博</strong>

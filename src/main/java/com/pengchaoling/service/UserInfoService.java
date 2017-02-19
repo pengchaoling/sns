@@ -34,6 +34,9 @@ public class UserInfoService {
         return userInfoDAO.selectUserInfoByNickname(nickname);
     }
 
+    public void IncWeibo(int uid){
+        userInfoDAO.IncWeibo(uid);
+    }
     /**
      *  默认用户信息插入，在注册的时候会调用这个函数去生成默认的函数
      * @param nickname

@@ -1,8 +1,6 @@
 package com.pengchaoling.dao;
 
 import com.pengchaoling.model.FocusGroup;
-import com.pengchaoling.model.LoginTicket;
-import com.pengchaoling.model.User;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;

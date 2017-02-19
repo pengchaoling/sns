@@ -9,22 +9,21 @@ $(function () {
 	 */
 	$('#picture').uploadify({
 		swf : PUBLIC + '/Uploadify/uploadify.swf',	//引入Uploadify核心Flash文件
-		uploader : uploadUrl,	//PHP处理脚本地址
+		uploader : uploadUrl,	//处理脚本地址
 		width : 120,	//上传按钮宽度
 		height : 30,	//上传按钮高度
 		buttonImage : PUBLIC + '/Uploadify/browse-btn.png',	//上传按钮背景图地址
 		fileTypeDesc : 'Image File',	//选择文件提示文字
 		fileTypeExts : '*.jpeg; *.jpg; *.png; *.gif',	//允许选择的文件类型
-		formData : {'session_id' : sid},
 		//上传成功后的回调函数
 		onUploadSuccess : function (file, data, response) {
 			eval('var data = ' + data);
 			if (data.status) {
-				$('input[name=max]').val(data.path.max);
-				$('input[name=medium]').val(data.path.medium);
-				$('input[name=mini]').val(data.path.mini);
+				$('input[name=max]').val(data.max);
+				$('input[name=medium]').val(data.medium);
+				$('input[name=mini]').val(data.mini);
 
-				$('#upload_img').fadeOut().next().fadeIn().find('img').attr('src', ROOT + '/Uploads/Pic/' + data.path.medium);
+				$('#upload_img').fadeOut().next().fadeIn().find('img').attr('src', ROOT + data.medium);
 			} else {
 				alert(data.msg);
 			}

@@ -2,8 +2,8 @@
     <div class="edit_tpl"><a href="" class='set_model'></a></div>
     <dl class="user_face">
         <dt>
-            <a href="{:U('/' . $uid)}">
-                <img src="<if condition='$face'>__ROOT__/Uploads/Face/{$face}<else/>__PUBLIC__/Images/noface.gif</if>" width='80' height='80' alt="{$username}" />
+            <a href="/profile/$!{userinfo.id}">
+                <img src="#if("$!userinfo.face80" != "")/img/$!{userinfo.face80} #else ../Images/noface.gif #end" width='80' height='80' id='face-img' alt="$!{userinfo.nickname}"/>
             </a>
         </dt>
         <dd>

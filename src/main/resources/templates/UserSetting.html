@@ -13,7 +13,7 @@
         var address = "$!{user.location}";
         var constellation = "$!{user.constellation}";
         var PUBLIC = '..';
-        var uploadUrl = '/UploadFile/UploodFace';
+        var uploadUrl = '/UploadFile/UploadFace';
         var sid = '$!{user.id}';
         var ROOT = '/img/';
     </script>
@@ -88,8 +88,7 @@
             <form action="/editFace" method='post'>
                 <div class='edit-face'>
                     <img src="
-
-                    #if($!userinfo.face180)
+                    #if("$!userinfo.face180" != "")
                     /img/$!{userinfo.face180}
                     #else
                     ../Images/noface.gif
