@@ -1,0 +1,64 @@
+#parse("./common/header.html")
+<title>微博系统-我的私信</title>
+<link rel="stylesheet" href="../Theme/default/Css/nav.css" />
+<link rel="stylesheet" href="../Theme/default/Css/letter.css" />
+<link rel="stylesheet" href="../Theme/default/Css/bottom.css" />
+<script type="text/javascript" src='../Js/jquery-1.7.2.min.js'></script>
+<script type="text/javascript" src='../Js/nav.js'></script>
+<script type='text/javascript' src='../Js/letter.js'></script>
+<script type="text/javascript">
+        var delLetter = "/msg/delMessage";
+    </script>
+#parse("./common/nav.html")
+<!--==========顶部固定导行条==========-->
+<!--==========内容主体==========-->
+<div style='height:60px;opcity:10'></div>
+<div class="main">
+    <!--=====左侧=====-->
+    #parse("./common/left.html")
+    <!--=====中部=====-->
+    <div id="middle" class='fleft'>
+        <p class='title'>我与$!{fromUser.nickname}的对话列表<span class='send' rel="$!{fromUser.nickname}" style="float:right;">向他回复</span></p>
+        #foreach($conversation in $messages)
+        <dl>
+            <dt>
+                <a href="/profile/$!{conversation.userinfo.uid}">
+                    <img src="#if("$!conversation.userinfo.face50" != "")/img/$!{conversation.userinfo.face50} #else ../Images/noface.gif #end" width='50' height='50'/>
+                </a>
+            </dt>
+            <dd>
+                <a href="/profile/$!{conversation.userinfo.uid}">$!{conversation.userinfo.nickname}</a>：
+                <span>$!{conversation.message.content}</span>.
+            </dd>
+            <dd class='tright'>
+                <span class="send_time">$date.format('yyyy-MM-dd HH:mm:ss', $conversation.message.createdDate)</span>
+                <span class='del-letter' lid='{$v.id}'>删除</span>
+            </dd>
+        </dl>
+        #end
+    </div>
+    <!--==========右侧==========-->
+    #parse("./common/right.html")
+</div>
+<!--==========内容主体结束==========-->
+
+<!--私信弹出框-->
+<div id='letter'>
+    <form action='/msg/addMessage' method='post'>
+        <div class="letter_head">
+            <span class='letter_text fleft'>发送私信</span>
+        </div>
+        <div class='send-user'>
+            用户昵称：<input type="text" name='toName'/>
+        </div>
+        <div class='send-cons'>
+            内容：<textarea name="content"></textarea>
+        </div>
+        <div class='lt-btn-wrap'>
+            <input type="submit" value='发送' class='send-lt-sub'/>
+            <span class='letter-cencle'>取消</span>
+        </div>
+    </form>
+</div>
+<!--==========底部==========-->
+#parse("./common/bottom.html")

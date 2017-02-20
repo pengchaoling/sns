@@ -4,6 +4,7 @@ import com.pengchaoling.model.Keep;
 import com.pengchaoling.model.Picture;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public interface KeepDAO {
     int addKeep(Keep keep);
 
     @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where uid=#{uid} order by id desc"})
-    List<Keep> selectKeepsByuid(int uid);
+    List<Keep> selectKeepsByuid(@Param("uid")int uid);
 
     @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where uid =#{uid} and wid=#{wid}"})
     Keep selectKeepByUidWid(Keep keep);

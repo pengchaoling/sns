@@ -3,6 +3,7 @@ package com.pengchaoling.dao;
 import com.pengchaoling.model.Picture;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 /**
@@ -22,7 +23,7 @@ public interface PictureDAO {
     int addWPicture(Picture picture);
 
     @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where wid=#{wid}"})
-    Picture selectPictureByWid(int wid);
+    Picture selectPictureByWid(@Param("wid") int wid);
 
 
 }

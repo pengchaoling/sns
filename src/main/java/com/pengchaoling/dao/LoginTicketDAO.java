@@ -19,7 +19,7 @@ public interface LoginTicketDAO {
     int addTicket(LoginTicket ticket);
 
     @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where ticket=#{ticket}"})
-    LoginTicket selectByTicket(String ticket);
+    LoginTicket selectByTicket(@Param("ticket") String ticket);
 
     @Update({"update ", TABLE_NAME, " set status=#{status} where ticket=#{ticket}"})
     void updateStatus(@Param("ticket") String ticket, @Param("status") int status);

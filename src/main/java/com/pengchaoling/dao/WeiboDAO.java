@@ -23,23 +23,27 @@ public interface WeiboDAO {
     int addWeibo(Weibo weibo);
 
     @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where id=#{id}"})
-    Weibo selectWeiBoById(int id);
+    Weibo selectWeiBoById(@Param("id")int id);
 
     @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, "order by id desc limit #{offset},#{limit}"})
     List<Weibo> selectWeibos(@Param("offset") int offset,
                            @Param("limit") int limit);
 
+    @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, "where uid =#{uid} order by id desc limit #{offset},#{limit}"})
+    List<Weibo> selectWeibosByUid(@Param("uid") int uid,@Param("offset") int offset,
+                             @Param("limit") int limit);
+
     @Update({"update ", TABLE_NAME, " set turn=turn+1 where id=#{wid}"})
-    void IncTurn(int wid);
+    void IncTurn(@Param("wid") int wid);
 
     @Update({"update ", TABLE_NAME, " set keep=keep+1 where id=#{wid}"})
-    void IncKeep(int wid);
+    void IncKeep(@Param("wid") int wid);
 
     @Update({"update ", TABLE_NAME, " set comment=comment+1 where id=#{wid}"})
-    void IncComment(int wid);
+    void IncComment(@Param("wid") int wid);
 
     @Delete({"delete from ", TABLE_NAME, " where id=#{id}"})
-    void deleteWeiboById(int id);
+    void deleteWeiboById(@Param("id") int id);
 
 
 

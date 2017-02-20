@@ -52,6 +52,10 @@ public class WeiboService {
         return weiboDAO.selectWeibos(offset,limit);
     }
 
+    public List<Weibo> selectWeibosByUid(int uid,int offset,int limit){
+        return weiboDAO.selectWeibosByUid(uid,offset,limit);
+    }
+
     public void IncTurn(int wid){
         weiboDAO.IncTurn(wid);
     }

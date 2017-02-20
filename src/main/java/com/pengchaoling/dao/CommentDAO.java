@@ -25,7 +25,7 @@ public interface CommentDAO {
 
 
     @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, "where wid = #{wid} order by id desc"})
-    List<Comment> selectCommentsByWid(int wid);
+    List<Comment> selectCommentsByWid(@Param("wid") int wid);
 
 
 }

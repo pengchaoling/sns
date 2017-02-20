@@ -22,19 +22,19 @@ public interface UserDAO {
     int addUser(User user);
 
     @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where id=#{id}"})
-    User selectById(int id);
+    User selectById(@Param("id") int id);
 
     @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where account=#{account}"})
-    User selectByAccount(String account);
+    User selectByAccount(@Param("account") String account);
 
     @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where nickname=#{nickname}"})
-    User selectByNickname(String nickname);
+    User selectByNickname(@Param("nickname") String nickname);
 
     @Update({"update ", TABLE_NAME, " set password=#{password} where id=#{id}"})
     void updatePassword(User user);
 
     @Delete({"delete from ", TABLE_NAME, " where id=#{id}"})
-    void deleteById(int id);
+    void deleteById(@Param("id") int id);
 
     @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, "order by id desc limit #{offset},#{limit}"})
     List<User> selectUsers(@Param("offset") int offset,

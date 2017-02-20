@@ -2,10 +2,7 @@ $(function () {
 	//发送私信框
    $('.l-reply,.send').click(function () {
       var username = '';
-
-      if ($(this).attr('class') == 'l-reply') {
-         username = $(this).parents('dd').prev().find('a').html();
-      }
+      username = $(this).attr('rel');
 
    	var letterLeft = ($(window).width() - $('#letter').width()) / 2;
 	 	var letterTop = $(document).scrollTop() + ($(window).height() - $('#letter').height()) / 2;
@@ -14,7 +11,7 @@ $(function () {
 	 		'top' : letterTop
 	 	});
 
-      obj.find('input[name=name]').val(username);
+      obj.find('input[name=toName]').val(username);
       obj.find('textarea').focus();
 		createBg('letter-bg');
 		drag(obj, obj.find('.letter_head'));

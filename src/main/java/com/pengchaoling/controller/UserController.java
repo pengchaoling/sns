@@ -1,10 +1,9 @@
 package com.pengchaoling.controller;
 
-import com.pengchaoling.model.HostHolder;
-import com.pengchaoling.model.User;
-import com.pengchaoling.model.UserInfo;
+import com.pengchaoling.model.*;
 import com.pengchaoling.service.UserInfoService;
 import com.pengchaoling.service.UserService;
+import com.pengchaoling.service.WeiboService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +33,9 @@ public class UserController {
     @Autowired
     UserInfoService userInfoService;
 
+    @Autowired
+    WeiboService weiboService;
+
     @RequestMapping(value = "/profile/{uid}", method = {RequestMethod.GET})
     public String profile(Model model, @PathVariable("uid") int uid) {
         User user = userService.getUserById(uid);
@@ -45,6 +47,29 @@ public class UserController {
 
         UserInfo profile = userInfoService.getUserInfoByUid(uid);
         model.addAttribute("profile",profile);
+
+        List<Weibo> weibos = weiboService.selectWeibosByUid(profile.getUid(),0,100);
+        List<ViewObject> vos = new ArrayList<ViewObject>();
+        if(!weibos.isEmpty()){
+            for(Weibo weibo : weibos){
+                ViewObject vo = new ViewObject();
+                vo.set("weibo",weibo);
+                vo.set("userinfo", userInfoService.getUserInfoByUid(weibo.getUid()));
+                vo.set("picture",weiboService.selectPictureByWid(weibo.getId()));
+                //如果是转发的，则获取原微博
+                if(weibo.getIsturn()>0){
+                    vo.set("weiboTurn",weiboService.selectWeiboById(weibo.getIsturn()));
+                    if(weiboService.selectWeiboById(weibo.getIsturn())!=null){
+                        vo.set("userTurn",userInfoService.getUserInfoByUid(weiboService.selectWeiboById(weibo.getIsturn()).getUid()));
+                        vo.set("pictureTurn",weiboService.selectPictureByWid(weibo.getIsturn()));
+                    }
+                }
+
+                vos.add(vo);
+            }
+        }
+
+        model.addAttribute("vos",vos);
 
 
         return "profile";

@@ -22,7 +22,7 @@ public interface UserInfoDAO {
     int addUserInfo(UserInfo userinfo);
 
     @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where uid=#{uid}"})
-    UserInfo selectUserInfoByUid(int uid);
+    UserInfo selectUserInfoByUid(@Param("uid") int uid);
 
     @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where nickname=#{nickname}"})
     UserInfo selectUserInfoByNickname(String nickname);
@@ -32,10 +32,10 @@ public interface UserInfoDAO {
 
     //字段加一
     @Update({"update ", TABLE_NAME, " set weibo=weibo+1 where uid=#{uid}"})
-    void IncWeibo(int uid);
+    void IncWeibo(@Param("uid") int uid);
 
     @Update({"update ", TABLE_NAME, " set weibo=weibo-1 where uid=#{uid}"})
-    void DecWeibo(int uid);
+    void DecWeibo(@Param("uid") int uid);
 
 
 

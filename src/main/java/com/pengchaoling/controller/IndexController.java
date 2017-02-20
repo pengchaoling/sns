@@ -67,7 +67,6 @@ public class IndexController {
             }
         }
 
-
         model.addAttribute("vos",vos);
         model.addAttribute("focusGroups",focusGroups);
         return "index";
