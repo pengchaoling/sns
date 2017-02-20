@@ -34,6 +34,11 @@ public interface UserInfoDAO {
     @Update({"update ", TABLE_NAME, " set weibo=weibo+1 where uid=#{uid}"})
     void IncWeibo(int uid);
 
+    @Update({"update ", TABLE_NAME, " set weibo=weibo-1 where uid=#{uid}"})
+    void DecWeibo(int uid);
+
+
+
 
 
 

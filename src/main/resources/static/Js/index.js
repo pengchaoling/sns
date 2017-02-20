@@ -120,7 +120,7 @@ $(function () {
 
 	 	//多重转发时，转发框内容处理
 	 	if (tid) {
-	 		author = orgObj.find('.author a').html();
+	 		author = $("#author_"+$(this).attr('id')).html();
 	 		cons = replace_weibo(' // @' + author + ' : ' + content);
 	 		author = $.trim(orgObj.find('.turn_name').html());
 	 		content = orgObj.find('.turn_cons p').html();

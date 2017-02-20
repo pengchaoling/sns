@@ -7,7 +7,7 @@
             </a>
         </dt>
         <dd>
-            <a href="{:U('/' . $uid)}">$!{userinfo.nickname}</a>
+            <a href="/profile/$!{userinfo.id}">$!{userinfo.nickname}</a>
         </dd>
     </dl>
     <ul class='num_list'>
@@ -27,7 +27,7 @@
                         <dl>
                             <dt>
                                 <a href="{:U('/' . $uid)}">
-                                    <img src="<if condition='$face'>__ROOT__/Uploads/Face/{$face}<else/>__PUBLIC__/Images/noface.gif</if>" width='30' height='30'/>
+                                    <img src="<if condition='$face'>__ROOT__/Uploads/Face/{$face}<else/>..Images/noface.gif</if>" width='30' height='30'/>
                                 </a>
                             </dt>
                             <dd><a href="{:U('/' . $uid)}">{$username}</a></dd>

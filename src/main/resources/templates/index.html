@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="../Theme/default/Css/nav.css" />
 <link rel="stylesheet" href="../Theme/default/Css/index.css" />
 <link rel="stylesheet" href="../Theme/default/Css/bottom.css" />
-<link rel="stylesheet" href="__PUBLIC__/Uploadify/uploadify.css"/>
+<link rel="stylesheet" href="../Uploadify/uploadify.css"/>
 <script type="text/javascript" src='../Js/jquery-1.7.2.min.js'></script>
 <script type="text/javascript" src='../Js/nav.js'></script>
 <script type="text/javascript" src='../Uploadify/jquery.uploadify.min.js'></script>
@@ -12,10 +12,10 @@
         var PUBLIC = '..';
         var uploadUrl = '/UploadFile/UploadPic';
         var ROOT = '/img/';
-        var commentUrl = "{:U('Index/comment')}";
-        var getComment = '{:U("Index/getComment")}';
-        var keepUrl = '{:U("Index/keep")}';
-        var delWeibo = '{:U("Index/delWeibo")}';
+        var commentUrl = "/addComment";
+        var getComment = '/getComment';
+        var keepUrl = '/keep';
+        var delWeibo = '/delWeibo';
     </script>
 #parse("./common/nav.html")
 <!--==========内容主体==========-->
@@ -120,22 +120,22 @@
             <span class="send_time">$date.format('yyyy-MM-dd HH:mm:ss', $!{vo.weibo.time})</span>
             <ul>
                 #if($!user.id == $!vo.userinfo.uid)
-                    <li class='del-li hidden'><span class='del-weibo' wid='{$v.id}'>删除</span></li>
+                    <li class='del-li hidden'><span class='del-weibo' wid='$!{vo.weibo.id}'>删除</span></li>
                     <li class='del-li hidden'>|</li>
                 #end
-                <li><span class='turn' id='{$v["id"]}'>转发($!{vo.weibo.turn})</span></li>
+                <li><span class='turn' id='$!{vo.weibo.id}'>转发($!{vo.weibo.turn})</span></li>
                 <li>|</li>
                 <li class='keep-wrap'>
-                    <span class='keep' wid='{$v.id}'>收藏($!{vo.weibo.keep})</span>
+                    <span class='keep' wid='$!{vo.weibo.id}'>收藏($!{vo.weibo.keep})</span>
                     <div class='keep-up hidden'></div>
                 </li>
                 <li>|</li>
-                <li><span class='comment' wid='{$v.id}'>评论($!{vo.weibo.comment})</span></li>
+                <li><span class='comment' wid='$!{vo.weibo.id}'>评论($!{vo.weibo.comment})</span></li>
             </ul>
         </div>
         <!--=====回复框=====-->
         <div class='comment_load hidden'>
-            <img src="__PUBLIC__/Images/loading.gif">评论加载中，请稍候...
+            <img src="../Images/loading.gif">评论加载中，请稍候...
         </div>
         <div class='comment_list hidden'>
             <textarea name="" sign='comment{$key}'></textarea>
@@ -146,7 +146,7 @@
                         <input type="checkbox" name=''/>同时转发到我的微博
                     </label>
                 </li>
-                <li class='comment_btn fright' wid='{$v.id}' uid='{$v.uid}'>评论</li>
+                <li class='comment_btn fright' wid='$!{vo.weibo.id}' uid='$!{vo.userinfo.uid}'>评论</li>
             </ul>
         </div>
         <!--=====回复框结束=====-->
@@ -157,7 +157,7 @@
 <div class="weibo">
     <!--头像-->
     <div class="face">
-        <a href="{:U('/' . $v['uid'])}">
+        <a href="/profile/$!{vo.userinfo.uid}">
             <img src="#if("$!vo.userinfo.face50" != "")/img/$!{vo.userinfo.face50} #else ../Images/noface.gif #end" width='50' height='50'"
         </a>
     </div>
@@ -165,7 +165,7 @@
         <dl>
             <!--用户名-->
             <dt class='author'>
-                <a href="/profile/$!{vo.userinfo.uid}">$!{vo.userinfo.nickname}</a>
+                <a href="/profile/$!{vo.userinfo.uid}" id="author_$!{vo.weibo.id}">$!{vo.userinfo.nickname}</a>
             </dt>
             <!--发布内容-->
             <dd class='content'>
@@ -218,9 +218,9 @@
                                         $date.format('yyyy-MM-dd HH:mm:ss', $!{vo.weiboTurn.time})
                                     </span>
                             <ul>
-                                <li><a href="">转发($!{vo.weibo.turn})</a></li>
+                                <li><a href="javascript:">转发($!{vo.weiboTurn.turn})</a></li>
                                 <li>|</li>
-                                <li><a href="">评论($!{vo.weibo.comment})</a></li>
+                                <li><a href="javascript:">评论($!{vo.weiboTurn.comment})</a></li>
                             </ul>
                         </div>
                     </div>
@@ -235,33 +235,33 @@
                         </span>
             <ul>
                 #if($user.id == $vo.userinfo.uid)
-                    <li class='del-li hidden'><span class='del-weibo' wid='{$v.id}'>删除</span></li>
+                    <li class='del-li hidden'><span class='del-weibo' wid='$!{vo.weibo.id}'>删除</span></li>
                     <li class='del-li hidden'>|</li>
                 #end
-                <li><span class='turn' id='{$v.id}' tid='{$v.isturn.id}'>转发($!{vo.weibo.turn})</span></li>
+                <li><span class='turn' id='$!{vo.weibo.id}' tid='$!{vo.weiboTurn.id}'>转发($!{vo.weibo.turn})</span></li>
                 <li>|</li>
                 <li class='keep-wrap'>
-                    <span class='keep' wid='{$v.id}'>收藏($!{vo.weibo.keep})</span>
+                    <span class='keep' wid='$!{vo.weibo.id}'>收藏($!{vo.weibo.keep})</span>
                     <div class='keep-up hidden'></div>
                 </li>
                 <li>|</li>
-                <li><span class='comment' wid='{$v.id}'>评论($!{vo.weibo.comment})</span></li>
+                <li><span class='comment' wid='$!{vo.weibo.id}'>评论($!{vo.weibo.comment})</span></li>
             </ul>
         </div>
         <!--回复框-->
         <div class='comment_load hidden'>
-            <img src="__PUBLIC__/Images/loading.gif">评论加载中，请稍候...
+            <img src="../Images/loading.gif">评论加载中，请稍候...
         </div>
         <div class='comment_list hidden'>
-            <textarea name="" sign='comment{$key}'></textarea>
+            <textarea name="" sign='comment$!{vo.weibo.id}'></textarea>
             <ul>
-                <li class='phiz fleft' sign='comment{$key}'></li>
+                <li class='phiz fleft' sign='comment$!{vo.weibo.id}'></li>
                 <li class='comment_turn fleft'>
                     <label>
                         <input type="checkbox" name=''/>同时转发到我的微博
                     </label>
                 </li>
-                <li class='comment_btn fright' wid='{$v.id}' uid='{$v.uid}'>评论</li>
+                <li class='comment_btn fright' wid='$!{vo.weibo.id}' uid='$!{vo.userinfo.uid}'>评论</li>
             </ul>
         </div>
         <!--回复框结束-->

@@ -29,5 +29,20 @@ public interface WeiboDAO {
     List<Weibo> selectWeibos(@Param("offset") int offset,
                            @Param("limit") int limit);
 
+    @Update({"update ", TABLE_NAME, " set turn=turn+1 where id=#{wid}"})
+    void IncTurn(int wid);
+
+    @Update({"update ", TABLE_NAME, " set keep=keep+1 where id=#{wid}"})
+    void IncKeep(int wid);
+
+    @Update({"update ", TABLE_NAME, " set comment=comment+1 where id=#{wid}"})
+    void IncComment(int wid);
+
+    @Delete({"delete from ", TABLE_NAME, " where id=#{id}"})
+    void deleteWeiboById(int id);
+
+
+
+
 
 }
