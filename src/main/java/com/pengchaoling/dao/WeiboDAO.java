@@ -25,13 +25,11 @@ public interface WeiboDAO {
     @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where id=#{id}"})
     Weibo selectWeiBoById(@Param("id")int id);
 
-    @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, "order by id desc limit #{offset},#{limit}"})
-    List<Weibo> selectWeibos(@Param("offset") int offset,
-                           @Param("limit") int limit);
+    @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, "order by id desc "})
+    List<Weibo> selectWeibos();
 
-    @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, "where uid =#{uid} order by id desc limit #{offset},#{limit}"})
-    List<Weibo> selectWeibosByUid(@Param("uid") int uid,@Param("offset") int offset,
-                             @Param("limit") int limit);
+    @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, "where uid =#{uid} order by id desc "})
+    List<Weibo> selectWeibosByUid(@Param("uid") int uid);
 
     @Update({"update ", TABLE_NAME, " set turn=turn+1 where id=#{wid}"})
     void IncTurn(@Param("wid") int wid);

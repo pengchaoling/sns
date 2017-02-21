@@ -1,9 +1,12 @@
 package com.pengchaoling.controller;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.pengchaoling.model.*;
 import com.pengchaoling.service.UserInfoService;
 import com.pengchaoling.service.UserService;
 import com.pengchaoling.service.WeiboService;
+import com.pengchaoling.util.SnsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,18 +41,21 @@ public class UserController {
     WeiboService weiboService;
 
     @RequestMapping(value = "/profile/{uid}", method = {RequestMethod.GET})
-    public String profile(Model model, @PathVariable("uid") int uid) {
+    public String profile(Model model, @PathVariable("uid") int uid,@RequestParam(value = "p",required = false,defaultValue ="1") int p) {
+        String url = "/profile/"+ uid;
         User user = userService.getUserById(uid);
         if(user==null){
             model.addAttribute("error_msg", "非法操作，没有该用户");
-            model.addAttribute("jump_url", "/");
+            model.addAttribute("jump_url", url);
             return "dispatch_jump";
         }
 
         UserInfo profile = userInfoService.getUserInfoByUid(uid);
         model.addAttribute("profile",profile);
+        //开始分页
+        PageHelper.startPage(p, 15);
 
-        List<Weibo> weibos = weiboService.selectWeibosByUid(profile.getUid(),0,100);
+        List<Weibo> weibos = weiboService.selectWeibosByUid(profile.getUid());
         List<ViewObject> vos = new ArrayList<ViewObject>();
         if(!weibos.isEmpty()){
             for(Weibo weibo : weibos){
@@ -69,9 +76,11 @@ public class UserController {
             }
         }
 
+        //分页字符串
+        PageInfo page = new PageInfo(weibos);
+        String pageStr = SnsUtil.showPage(page,url);
+        model.addAttribute("pageStr",pageStr);
         model.addAttribute("vos",vos);
-
-
         return "profile";
     }
 }

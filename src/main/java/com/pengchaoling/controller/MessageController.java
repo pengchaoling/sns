@@ -1,5 +1,7 @@
 package com.pengchaoling.controller;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.pengchaoling.model.*;
 import com.pengchaoling.service.MessageService;
 import com.pengchaoling.service.UserInfoService;
@@ -42,11 +44,13 @@ public class MessageController {
      * 私信对话列表
      */
     @RequestMapping(path = {"/msg/list"}, method = {RequestMethod.GET})
-    public String conversationDetail(Model model) {
+    public String conversationDetail(Model model,@RequestParam(value = "p",required = false,defaultValue ="1") int p) {
         try {
             int localUserId = hostHolder.getUser().getId();
             List<ViewObject> conversations = new ArrayList<ViewObject>();
-            List<Message> conversationList = messageService.getConversationList(localUserId, 0, 10);
+            //开始分页
+            PageHelper.startPage(p, 15);
+            List<Message> conversationList = messageService.getConversationList(localUserId);
             for (Message msg : conversationList) {
                 ViewObject vo = new ViewObject();
                 vo.set("conversation", msg);
@@ -58,6 +62,10 @@ public class MessageController {
                 conversations.add(vo);
             }
                 model.addAttribute("conversations", conversations);
+            //分页字符串
+            PageInfo page = new PageInfo(conversationList);
+            String pageStr = SnsUtil.showPage(page,"/msg/list");
+            model.addAttribute("pageStr",pageStr);
         } catch (Exception e) {
             logger.error("获取站内信列表失败" + e.getMessage());
         }
@@ -70,7 +78,8 @@ public class MessageController {
     @RequestMapping(path = {"/msg/detail"}, method = {RequestMethod.GET})
     public String conversationDetail(Model model, @Param("conversationId") String conversationId,@Param("uid") int uid) {
         try {
-            List<Message> conversationList = messageService.getConversationDetail(conversationId, 0, 100);
+
+            List<Message> conversationList = messageService.getConversationDetail(conversationId);
             List<ViewObject> messages = new ArrayList<>();
             for (Message msg : conversationList) {
                 ViewObject vo = new ViewObject();

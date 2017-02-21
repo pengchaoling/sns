@@ -1,5 +1,7 @@
 package com.pengchaoling.controller;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.pengchaoling.model.FocusGroup;
 import com.pengchaoling.model.HostHolder;
 import com.pengchaoling.model.ViewObject;
@@ -8,11 +10,14 @@ import com.pengchaoling.service.FocusGroupService;
 import com.pengchaoling.service.UserInfoService;
 import com.pengchaoling.service.UserService;
 import com.pengchaoling.service.WeiboService;
+import com.pengchaoling.util.SnsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.swing.text.View;
 import java.util.ArrayList;
@@ -42,11 +47,12 @@ public class IndexController {
 
 
     @RequestMapping(path = {"/", "/index"}, method = {RequestMethod.GET, RequestMethod.POST})
-    public String index(Model model) {
+    public String index(Model model,@RequestParam(value = "p",required = false,defaultValue ="1") int p) {
         //获取用户分组
         List<FocusGroup> focusGroups = focusGroupService.selectFocusGroupsByUid(hostHolder.getUser().getId());
-
-        List<Weibo> weibos = weiboService.selectWeibos(0,100);
+        //开始分页
+        PageHelper.startPage(p, 15);
+        List<Weibo> weibos = weiboService.selectWeibos();
         List<ViewObject> vos = new ArrayList<ViewObject>();
         if(!weibos.isEmpty()){
             for(Weibo weibo : weibos){
@@ -66,9 +72,13 @@ public class IndexController {
                 vos.add(vo);
             }
         }
-
+        //分页字符串
+        PageInfo page = new PageInfo(weibos);
+        String pageStr = SnsUtil.showPage(page,"/");
+        model.addAttribute("pageStr",pageStr);
         model.addAttribute("vos",vos);
         model.addAttribute("focusGroups",focusGroups);
         return "index";
     }
+
 }

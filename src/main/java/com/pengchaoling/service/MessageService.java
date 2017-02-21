@@ -27,12 +27,12 @@ public class MessageService {
         return messageDAO.addMessage(message);
     }
 
-    public List<Message> getConversationDetail(String conversationId, int offset, int limit) {
-        return messageDAO.getConversationDetail(conversationId, offset, limit);
+    public List<Message> getConversationDetail(String conversationId) {
+        return messageDAO.getConversationDetail(conversationId);
     }
 
-    public List<Message> getConversationList(int userId, int offset, int limit) {
-        return messageDAO.getConversationList(userId, offset, limit);
+    public List<Message> getConversationList(int userId) {
+        return messageDAO.getConversationList(userId);
     }
 
     public int getConvesationUnreadCount(int userId, String conversationId) {

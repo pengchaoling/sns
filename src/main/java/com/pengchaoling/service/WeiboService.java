@@ -48,12 +48,12 @@ public class WeiboService {
         return weiboDAO.selectWeiBoById(id);
     }
 
-    public List<Weibo>  selectWeibos(int offset,int limit){
-        return weiboDAO.selectWeibos(offset,limit);
+    public List<Weibo>  selectWeibos(){
+        return weiboDAO.selectWeibos();
     }
 
-    public List<Weibo> selectWeibosByUid(int uid,int offset,int limit){
-        return weiboDAO.selectWeibosByUid(uid,offset,limit);
+    public List<Weibo> selectWeibosByUid(int uid){
+        return weiboDAO.selectWeibosByUid(uid);
     }
 
     public void IncTurn(int wid){
