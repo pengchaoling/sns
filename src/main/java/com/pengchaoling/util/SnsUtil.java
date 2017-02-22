@@ -16,7 +16,7 @@ public class SnsUtil {
     private static final Logger logger = LoggerFactory.getLogger(SnsUtil.class);
     public static int ANONYMOUS_USERID = 3;
     //系统用户id 用于发系统站内信（私信）
-    public static int SYSTEM_USERID = 4;
+    public static int SYSTEM_USERID = 3;
     //生成分页样式 分页参数用p
     public static String showPage(PageInfo page,String url){
         int nowPage = page.getPageNum();        //现在的页面

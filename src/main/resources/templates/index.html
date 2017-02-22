@@ -225,6 +225,8 @@
                                         $date.format('yyyy-MM-dd HH:mm:ss', $!{vo.weiboTurn.time})
                                     </span>
                             <ul>
+                                <li><a href="javascript:">赞($!{vo.turnLikeCount})</a></li>
+                                <li>|</li>
                                 <li><a href="javascript:">转发($!{vo.weiboTurn.turn})</a></li>
                                 <li>|</li>
                                 <li><a href="javascript:">评论($!{vo.weiboTurn.comment})</a></li>
@@ -245,6 +247,11 @@
                     <li class='del-li hidden'><span class='del-weibo' wid='$!{vo.weibo.id}'>删除</span></li>
                     <li class='del-li hidden'>|</li>
                 #end
+                <li class='keep-wrap'>
+                    <span class='like' wid='$!{vo.weibo.id}'>#if($!vo.liked == 0)赞($!{vo.likeCount}) #else 取消赞($!{vo.likeCount}) #end</span>
+                    <div class='keep-up hidden'></div>
+                </li>
+                <li>|</li>
                 <li><span class='turn' id='$!{vo.weibo.id}' tid='$!{vo.weiboTurn.id}'>转发($!{vo.weibo.turn})</span></li>
                 <li>|</li>
                 <li class='keep-wrap'>

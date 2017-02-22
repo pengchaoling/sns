@@ -46,15 +46,15 @@ public class LikeController {
         try{
             Weibo weibo = weiboService.selectWeiboById(wid);
 
-            //提交到异步事件队列去处理
-        /*eventProducer.fireEvent(new EventModel(EventType.LIKE)
-                .setActorId(hostHolder.getUser().getId()).setEntityId(wid)
-                .setEntityType(EntityType.ENTITY_COMMENT).setEntityOwnerId(weibo.getUid())
-                .setExt("weibo", String.valueOf(weibo.getId())));
-        */
+
             long likeCount = likeService.like(hostHolder.getUser().getId(), EntityType.ENTITY_WEIBO, wid);
             int  status = likeService.getLikeStatus(hostHolder.getUser().getId(), EntityType.ENTITY_WEIBO, wid);
             if(status==1){
+                //提交到异步事件队列去处理 通知博主被点赞了
+                eventProducer.fireEvent(new EventModel(EventType.LIKE)
+                        .setActorId(hostHolder.getUser().getId()).setEntityId(wid)
+                        .setEntityType(EntityType.ENTITY_WEIBO).setEntityOwnerId(weibo.getUid())
+                        .setExt("weibo", String.valueOf(weibo.getContent())));
                 //点赞
                 return SnsUtil.getJSONString(1, String.valueOf(likeCount));
             }else{

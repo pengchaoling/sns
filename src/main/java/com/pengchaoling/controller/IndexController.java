@@ -66,6 +66,8 @@ public class IndexController {
                     vo.set("weiboTurn",weiboService.selectWeiboById(weibo.getIsturn()));
                     if(weiboService.selectWeiboById(weibo.getIsturn())!=null){
                         vo.set("userTurn",userInfoService.getUserInfoByUid(weiboService.selectWeiboById(weibo.getIsturn()).getUid()));
+                        vo.set("turnLikeCount", likeService.getLikeCount(EntityType.ENTITY_WEIBO, weibo.getIsturn()));
+
                         vo.set("pictureTurn",weiboService.selectPictureByWid(weibo.getIsturn()));
                     }
                 }

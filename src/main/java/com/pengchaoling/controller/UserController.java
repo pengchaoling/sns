@@ -3,6 +3,7 @@ package com.pengchaoling.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.pengchaoling.model.*;
+import com.pengchaoling.service.LikeService;
 import com.pengchaoling.service.UserInfoService;
 import com.pengchaoling.service.UserService;
 import com.pengchaoling.service.WeiboService;
@@ -40,6 +41,9 @@ public class UserController {
     @Autowired
     WeiboService weiboService;
 
+    @Autowired
+    LikeService likeService;
+
     @RequestMapping(value = "/profile/{uid}", method = {RequestMethod.GET})
     public String profile(Model model, @PathVariable("uid") int uid,@RequestParam(value = "p",required = false,defaultValue ="1") int p) {
         String url = "/profile/"+ uid;
@@ -63,12 +67,17 @@ public class UserController {
                 vo.set("weibo",weibo);
                 vo.set("userinfo", userInfoService.getUserInfoByUid(weibo.getUid()));
                 vo.set("picture",weiboService.selectPictureByWid(weibo.getId()));
+                //获取是否已点赞
+                vo.set("liked", likeService.getLikeStatus(hostHolder.getUser().getId(), EntityType.ENTITY_WEIBO, weibo.getId()));
+                vo.set("likeCount", likeService.getLikeCount(EntityType.ENTITY_WEIBO, weibo.getId()));
+
                 //如果是转发的，则获取原微博
                 if(weibo.getIsturn()>0){
                     vo.set("weiboTurn",weiboService.selectWeiboById(weibo.getIsturn()));
                     if(weiboService.selectWeiboById(weibo.getIsturn())!=null){
                         vo.set("userTurn",userInfoService.getUserInfoByUid(weiboService.selectWeiboById(weibo.getIsturn()).getUid()));
                         vo.set("pictureTurn",weiboService.selectPictureByWid(weibo.getIsturn()));
+                        vo.set("turnLikeCount", likeService.getLikeCount(EntityType.ENTITY_WEIBO, weibo.getIsturn()));
                     }
                 }
 
