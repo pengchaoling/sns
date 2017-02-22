@@ -554,3 +554,41 @@
 	padding: 5px 0;
 }
 /********************************中部**************************************/
+
+.follow{
+      background: #fa7d3c;
+      width: 88px;
+      height: 20px !important;
+      line-height: 20px;
+      border-radius: 4px;
+      font-size: 12px;
+      text-align: center;
+      cursor: pointer;
+      padding: 5px 25px;
+      color: #fff;
+  }
+ .unfollow{
+        background: #696e78;
+        width: 88px;
+        height: 20px !important;
+        line-height: 20px;
+        border-radius: 4px;
+        font-size: 12px;
+        text-align: center;
+        cursor: pointer;
+        padding: 5px 25px;
+        color: #fff;
+    }
+.follow-up {
+    position: absolute;
+    width: 80px;
+    height: 24px;
+    line-height: 24px;
+    text-align: center;
+    border: 1px solid #088CD2;
+    border-radius: 4px;
+    background: #D7EEFB;
+    color: #71CD6A;
+    left: -25px;
+    top: -30px;
+}

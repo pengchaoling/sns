@@ -3,10 +3,8 @@ package com.pengchaoling.interceptor;
 import com.pengchaoling.dao.LoginTicketDAO;
 import com.pengchaoling.dao.UserDAO;
 import com.pengchaoling.dao.UserInfoDAO;
-import com.pengchaoling.model.HostHolder;
-import com.pengchaoling.model.LoginTicket;
-import com.pengchaoling.model.User;
-import com.pengchaoling.model.UserInfo;
+import com.pengchaoling.model.*;
+import com.pengchaoling.service.FollowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -36,6 +34,9 @@ public class PassportInterceptor implements HandlerInterceptor {
 
     @Autowired
     private UserInfoDAO userInfoDAO;
+
+    @Autowired
+    FollowService followService;
 
     /**
      *  处理controller之前，会先调用
@@ -77,6 +78,8 @@ public class PassportInterceptor implements HandlerInterceptor {
         User user = hostHolder.getUser();
         if (modelAndView != null && user != null) {
             UserInfo userInfo = userInfoDAO.selectUserInfoByUid(user.getId());
+            userInfo.setFollower(followService.getFollowerCount(EntityType.ENTITY_USER, user.getId()));
+            userInfo.setFollowee(followService.getFolloweeCount(user.getId(), EntityType.ENTITY_USER));
             modelAndView.addObject("user", user);
             modelAndView.addObject("userinfo",userInfo);
         }

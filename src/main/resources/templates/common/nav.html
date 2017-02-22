@@ -1,7 +1,5 @@
 <script type='text/javascript'>
-    var delFollow = "{:U('Common:delFollow')}";
-    var editStyle = "{:U('Common:editStyle')}";
-    var getMsgUrl = "{:U('Common:getMsg')}";
+    var getMsgUrl = "/getMsg";
 </script>
 </head>
 <body>
@@ -60,50 +58,3 @@
         </div>
     </div>
 <!--==========顶部固定导行条==========-->
-<!--==========加关注弹出框==========-->
-
-<?php
-    $group = M('group')->where(array('uid' => session('uid')))->select();
-?>
-    <script type='text/javascript'>
-        var addFollow = "{:U('Common/addFollow')}";
-    </script>
-    <div id='follow'>
-        <div class="follow_head">
-            <span class='follow_text fleft'>关注好友</span>
-        </div>
-        <div class='sel-group'>
-            <span>好友分组：</span>
-            <select name="gid">
-                <option value="0">默认分组</option>
-                <foreach name='group' item='v'>
-                    <option value="{$v.id}">{$v.name}</option>
-                </foreach>
-            </select>
-        </div>
-        <div class='fl-btn-wrap'>
-            <input type="hidden" name='follow'/>
-            <span class='add-follow-sub'>关注</span>
-            <span class='follow-cencle'>取消</span>
-        </div>
-    </div>
-<!--==========加关注弹出框==========-->
-
-<!--==========自定义模版==========-->
-    <div id='model' class='hidden'>
-        <div class="model_head">
-            <span class="model_text">个性化设置</span>
-            <span class="close fright"></span>
-        </div>
-        <ul>
-            <li style='background:url(__PUBLIC__/Images/default.jpg) no-repeat;' theme='default'></li>
-            <li style='background:url(__PUBLIC__/Images/style2.jpg) no-repeat;' theme='style2'></li>
-            <li style='background:url(__PUBLIC__/Images/style3.jpg) no-repeat;' theme='style3'></li>
-            <li style='background:url(__PUBLIC__/Images/style4.jpg) no-repeat;' theme='style4'></li>
-        </ul>
-        <div class='model_operat'>
-            <span class='model_save'>保存</span>
-            <span class='model_cancel'>取消</span>
-        </div>
-    </div>
-<!--==========自定义模版==========-->

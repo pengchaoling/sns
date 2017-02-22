@@ -72,5 +72,54 @@ public class UserSettingController {
 
     }
 
+    /**
+     * 修改基本信息
+     */
+    @RequestMapping(value = "/editBasic", method = {RequestMethod.POST})
+    public String editBasci(Model model,@RequestParam("nickname") String nickname,
+                            @RequestParam("truename") String truename,
+                            @RequestParam("sex") int  sex,
+                            @RequestParam("province") String province,
+                            @RequestParam("city") String city,
+                            @RequestParam("night") String night,
+                            @RequestParam("intro") String intro,
+                           HttpServletResponse response) {
+
+
+        try {
+            UserInfo userInfo = new UserInfo();
+            userInfo.setUid(hostHolder.getUser().getId());
+            userInfo.setNickname(nickname);
+            userInfo.setTruename(truename);
+            userInfo.setSex(sex);
+            userInfo.setLocation(province+" "+city);
+            //星座
+            userInfo.setConstellation(night);
+            userInfo.setIntro(intro);
+            userInfoService.updateBasic(userInfo);
+
+
+            model.addAttribute("success_msg", "修改信息成功");
+            model.addAttribute("jump_url", "/userSetting");
+            return "dispatch_jump";
+
+        } catch (Exception e) {
+            logger.error("修改信息异常", e.getMessage());
+            model.addAttribute("error_msg", "修改信息失败");
+            model.addAttribute("jump_url", "/userSetting");
+            return "dispatch_jump";
+        }
+
+    }
+
+    /**
+     * 修改密码
+     */
+    @RequestMapping(value = "/editPwd", method = {RequestMethod.POST})
+    public String editPwd(Model model) {
+            model.addAttribute("success_msg", "对不起，次功能正在开发中......");
+            model.addAttribute("jump_url", "/userSetting");
+            return "dispatch_jump";
+    }
 
 }

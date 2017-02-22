@@ -8,6 +8,7 @@
 <script type="text/javascript" src='../Uploadify/jquery.uploadify.min.js'></script>
 <script type='text/javascript' src='../Js/nav.js'></script>
 <script type='text/javascript' src='../Js/index.js'></script>
+
 <script type='text/javascript'>
         var PUBLIC = '..';
         var uploadUrl = '/UploadFile/UploadPic';
@@ -18,6 +19,8 @@
         var delWeibo = '/delWeibo';
         var likeUrl = '/like';
         var sid = '$!{user.id}';
+        var followUrl = '/followUser';
+        var unfollowUrl = '/unfollowUser';
     </script>
 <!--==========顶部固定导行条==========-->
 #parse("./common/nav.html")
@@ -32,17 +35,17 @@
             </p>
             <ul>
                 <li>
-                    <a href="{:U('follow/' . $userinfo['uid'])}">
-                        <strong>$!{profile.follow}</strong><br/>关注
+                    <a href="javascript:;">
+                        <strong>$!{followeeCount}</strong><br/>关注
                     </a>
                 </li>
                 <li>
-                    <a href="{:U('fans/' . $userinfo['uid'])}">
-                        <strong>$!{profile.fans}</strong><br/>粉丝
+                    <a href="javascript:;">
+                        <strong>$!{followerCount}</strong><br/>粉丝
                     </a>
                 </li>
                 <li>
-                    <a href="{:U('/' . $userinfo['uid'])}">
+                    <a href="javascript:;">
                         <strong>$!{profile.weibo}</strong><br/>微博
                     </a>
                 </li>
@@ -61,6 +64,15 @@
             #if($!user.id == $!profile.uid)
                 <li class='uedit full'>
                     <a href="/userSetting">修改个人资料</a>
+                </li>
+            #else
+                <li class='full' style="position: relative;">
+                    #if($!followed)
+                    <a class="unfollow" uid="$!{profile.uid}" href="javascript:;">取消关注</a>
+                    #else
+                    <a class="follow" uid="$!{profile.uid}" href="javascript:;">关注</a>
+                    #end
+                    <div class='follow-up hidden'></div>
                 </li>
             #end
         </ul>
@@ -323,30 +335,30 @@
     <!--==========右侧==========-->
     <div id='right'>
         <dl>
-            <dt>我的关注({$userinfo.follow}) <if condition='count($fans) gt 8'><a href="">更多»</a></if></dt>
-            <foreach name='follow' item='v'>
-                <dd>
-                    <a href="{:U('/' . $v['uid'])}">
-                        <img src="<if condition='$v["face"]'>__ROOT__/Uploads/Face/{$v.face}<else/>__PUBLIC__/Images/noface.gif</if>" alt="{$v.username}" width='50' height='50'/>
-                    </a>
-                    <p>
-                        <a href="{:U('/' . $v['uid'])}">{$v.username}</a>
-                    </p>
-                </dd>
-            </foreach>
+            <dt>#if($profile.uid==$user.id)我#else他#end的关注($!{followeeCount})</dt>
+            #foreach($followee in $followees)
+            <dd>
+                <a href="/profile/$!{followee.userinfo.uid}">
+                    <img src="#if("$!followee.userinfo.face50" != "")/img/$!{followee.userinfo.face50} #else ../Images/noface.gif #end" alt="$!{followee.userinfo.nickname}" width='50' height='50' />
+                </a>
+                <p>
+                    <a href="/profile/$!{followee.userinfo.uid}">$!{followee.userinfo.nickname}</a>
+                </p>
+            </dd>
+            #end
         </dl>
         <dl>
-            <dt>我的粉丝({$userinfo.fans}) <if condition='count($fans) gt 8'><a href="">更多»</a></if></dt>
-            <foreach name='fans' item='v'>
+            <dt>#if($profile.uid==$user.id)我#else他#end的粉丝($!{followerCount})</dt>
+                #foreach($follower in $followers)
                 <dd>
-                    <a href="{:U('/' . $v['uid'])}">
-                        <img src="<if condition='$v["face"]'>__ROOT__/Uploads/Face/{$v.face}<else/>__PUBLIC__/Images/noface.gif</if>" alt="{$v.username}" width='50' height='50'/>
+                    <a href="/profile/$!{follower.userinfo.uid}">
+                        <img src="#if("$!follower.userinfo.face50" != "")/img/$!{follower.userinfo.face50} #else ../Images/noface.gif #end" alt="$!{follower.userinfo.nickname}" width='50' height='50' />
                     </a>
                     <p>
-                        <a href="{:U('/' . $v['uid'])}">{$v.username}</a>
+                        <a href="/profile/$!{follower.userinfo.uid}">$!{follower.userinfo.nickname}</a>
                     </p>
                 </dd>
-            </foreach>
+                #end
         </dl>
     </div>
 </div>

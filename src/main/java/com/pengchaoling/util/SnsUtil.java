@@ -17,8 +17,15 @@ public class SnsUtil {
     public static int ANONYMOUS_USERID = 3;
     //系统用户id 用于发系统站内信（私信）
     public static int SYSTEM_USERID = 3;
-    //生成分页样式 分页参数用p
-    public static String showPage(PageInfo page,String url){
+
+    /**
+     * 分页函数
+     * @param page    传进来的PageInfo实例
+     * @param url     传进来的url
+     * @param pathParam 分页传参的字符串 比如 ?p 或 &p
+     * @return
+     */
+    public static String showPage(PageInfo page,String url,String pathParam){
         int nowPage = page.getPageNum();        //现在的页面
         int prePage = page.getPrePage();        //上一页
         int nextPage = page.getNextPage();      //下一页
@@ -29,18 +36,20 @@ public class SnsUtil {
         boolean hasPreviousPage = page.isHasPreviousPage();
         boolean hasNextPage = page.isHasNextPage();
 
+
+
         String info = "共" + page.getTotal()+"条记录，"+nowPage + "/" + totalPage + "页";
 
         //第一页，最后一页样式
         String first,last;
         if(nowPage!=firstPage&&totalPage>1){
-            first = "&nbsp;<a href='"+url+"?p="+firstPage+"'>首页</a>&nbsp;";
+            first = "&nbsp;<a href='"+url+pathParam+"="+firstPage+"'>首页</a>&nbsp;";
         }else{
             first = "";
         }
 
         if(nowPage!=lastPage&&totalPage>1){
-            last = "&nbsp;<a href='"+url+"?p="+firstPage+"'>尾页</a>";
+            last = "&nbsp;<a href='"+url+pathParam+"="+firstPage+"'>尾页</a>";
         }else {
             last = "";
         }
@@ -49,13 +58,13 @@ public class SnsUtil {
         String upPage,downPage;
 
         if(hasPreviousPage){
-            upPage = "<a href='"+url+"?p="+prePage+"'>上一页</a>";
+            upPage = "<a href='"+url+pathParam+"="+prePage+"'>上一页</a>";
         }else{
             upPage = "";
         }
 
         if(hasNextPage){
-            downPage = "<a href='"+url+"?p="+nextPage+"'>下一页</a>";
+            downPage = "<a href='"+url+pathParam+"="+nextPage+"'>下一页</a>";
         }else{
             downPage="";
         }
@@ -67,7 +76,7 @@ public class SnsUtil {
             int  pageNum = (nowPage >= 3) ? (nowPage - 3 + i) : (nowPage - 1 + i);
             if(pageNum!=nowPage){
                 if(pageNum<=totalPage&&pageNum>=firstPage){
-                    linkPage += "&nbsp;<a href='"+url+"?p="+pageNum+"'>&nbsp;"+pageNum+"&nbsp;</a>";
+                    linkPage += "&nbsp;<a href='"+url+pathParam+"="+pageNum+"'>&nbsp;"+pageNum+"&nbsp;</a>";
                 }else {
                     //没有那么多页
                     break;

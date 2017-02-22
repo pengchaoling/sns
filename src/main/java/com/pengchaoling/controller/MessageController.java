@@ -64,7 +64,7 @@ public class MessageController {
                 model.addAttribute("conversations", conversations);
             //分页字符串
             PageInfo page = new PageInfo(conversationList);
-            String pageStr = SnsUtil.showPage(page,"/msg/list");
+            String pageStr = SnsUtil.showPage(page,"/msg/list","?p");
             model.addAttribute("pageStr",pageStr);
         } catch (Exception e) {
             logger.error("获取站内信列表失败" + e.getMessage());
@@ -76,9 +76,10 @@ public class MessageController {
      * 和某个人的私信详情 一条一条的
      */
     @RequestMapping(path = {"/msg/detail"}, method = {RequestMethod.GET})
-    public String conversationDetail(Model model, @Param("conversationId") String conversationId,@Param("uid") int uid) {
+    public String conversationDetail(Model model, @Param("conversationId") String conversationId,@Param("uid") int uid,@RequestParam(value = "p",required = false,defaultValue ="1") int p) {
         try {
-
+            //开始分页
+            PageHelper.startPage(p, 15);
             List<Message> conversationList = messageService.getConversationDetail(conversationId);
             List<ViewObject> messages = new ArrayList<>();
             for (Message msg : conversationList) {
@@ -95,6 +96,12 @@ public class MessageController {
             UserInfo fromUser = userInfoService.getUserInfoByUid(uid);
             model.addAttribute("fromUser",fromUser);
             model.addAttribute("messages", messages);
+
+            //分页字符串
+            PageInfo page = new PageInfo(conversationList);
+            String url = "/msg/detail?conversationId="+conversationId+"&uid=" + uid;
+            String pageStr = SnsUtil.showPage(page,url,"&p");
+            model.addAttribute("pageStr",pageStr);
 
             //把信息修改为已读状态
             messageService.updateHasRead(hostHolder.getUser().getId(),conversationId);

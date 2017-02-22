@@ -20,8 +20,8 @@ public class UserInfo {
     private String face80;          //80*80头像
     private String face180;         //180*180头像
     private String style;           //个性模板
-    private int follow;             //关注数
-    private int fans;               //粉丝数
+    private long followee;           //关注数  其实这两个字段已经存到redis里面了
+    private long follower;            //粉丝数
     private int weibo;              //微博数
     private int uid;                //关联用户ID
 
@@ -37,8 +37,8 @@ public class UserInfo {
         this.face80 = "";
         this.face180 = "";
         this.style = "default";
-        this.follow = 0;
-        this.fans = 0;
+        this.followee = 0;
+        this.follower = 0;
         this.weibo = 0;
     }
 
@@ -131,20 +131,20 @@ public class UserInfo {
         this.style = style;
     }
 
-    public int getFollow(){
-        return this.follow;
+    public long getFollower(){
+        return this.follower;
     }
 
-    public void setFollow(int follow){
-        this.follow = follow;
+    public void setFollower(long follower){
+        this.follower = follower;
     }
 
-    public int getFans(){
-        return this.fans;
+    public long getFollowee(){
+        return this.followee;
     }
 
-    public void setFans(int fans){
-        this.fans = fans;
+    public void setFollowee(long followee){
+        this.followee = followee;
     }
 
     public int getWeibo(){

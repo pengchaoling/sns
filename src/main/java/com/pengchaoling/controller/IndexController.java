@@ -77,7 +77,7 @@ public class IndexController {
         }
         //分页字符串
         PageInfo page = new PageInfo(weibos);
-        String pageStr = SnsUtil.showPage(page,"/");
+        String pageStr = SnsUtil.showPage(page,"/","?p");
         model.addAttribute("pageStr",pageStr);
         model.addAttribute("vos",vos);
         model.addAttribute("focusGroups",focusGroups);

@@ -9,4 +9,5 @@ package com.pengchaoling.model;
 public class EntityType {
     public static int ENTITY_COMMENT = 1;       //评论
     public static int ENTITY_WEIBO = 2;         //微博
+    public static int ENTITY_USER = 3;          //用户
 }

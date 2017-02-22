@@ -3,10 +3,7 @@ package com.pengchaoling.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.pengchaoling.model.*;
-import com.pengchaoling.service.LikeService;
-import com.pengchaoling.service.UserInfoService;
-import com.pengchaoling.service.UserService;
-import com.pengchaoling.service.WeiboService;
+import com.pengchaoling.service.*;
 import com.pengchaoling.util.SnsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,6 +41,9 @@ public class UserController {
     @Autowired
     LikeService likeService;
 
+    @Autowired
+    FollowService followService;
+
     @RequestMapping(value = "/profile/{uid}", method = {RequestMethod.GET})
     public String profile(Model model, @PathVariable("uid") int uid,@RequestParam(value = "p",required = false,defaultValue ="1") int p) {
         String url = "/profile/"+ uid;
@@ -59,6 +59,7 @@ public class UserController {
         //开始分页
         PageHelper.startPage(p, 15);
 
+        //个人微博列表
         List<Weibo> weibos = weiboService.selectWeibosByUid(profile.getUid());
         List<ViewObject> vos = new ArrayList<ViewObject>();
         if(!weibos.isEmpty()){
@@ -84,12 +85,47 @@ public class UserController {
                 vos.add(vo);
             }
         }
+        //是否已关注该用户
+        boolean followed = followService.isFollower(hostHolder.getUser().getId(),EntityType.ENTITY_USER,uid);
+        model.addAttribute("followed",followed);
 
-        //分页字符串
+        //获取当前用户的所有粉丝  暂时没做分页
+        List<Integer> followerIds = followService.getFollowers(EntityType.ENTITY_USER, uid, 0, 100);
+        model.addAttribute("followers", getUsersInfo(hostHolder.getUser().getId(), followerIds));
+        model.addAttribute("followerCount", followService.getFollowerCount(EntityType.ENTITY_USER, uid));
+
+        //获取当前用户的所有偶像个（关注对象） 暂时没做分页
+        List<Integer> followeeIds = followService.getFollowees(uid, EntityType.ENTITY_USER, 0, 100);
+        model.addAttribute("followeeCount", followService.getFolloweeCount(uid, EntityType.ENTITY_USER));
+        model.addAttribute("followees", getUsersInfo(hostHolder.getUser().getId(), followeeIds));
+
+
+        //微博列表分页字符串
         PageInfo page = new PageInfo(weibos);
-        String pageStr = SnsUtil.showPage(page,url);
+        String pageStr = SnsUtil.showPage(page,url,"?p");
         model.addAttribute("pageStr",pageStr);
         model.addAttribute("vos",vos);
         return "profile";
+    }
+
+
+    /**
+     *  获取用户信息 这只是个辅助方法
+     */
+    private List<ViewObject> getUsersInfo(int localUserId, List<Integer> userIds) {
+        List<ViewObject> userInfos = new ArrayList<ViewObject>();
+        for (Integer uid : userIds) {
+            UserInfo userInfo = userInfoService.getUserInfoByUid(uid);
+            if (userInfo == null) {
+                continue;
+            }
+            ViewObject vo = new ViewObject();
+            vo.set("userinfo", userInfo);
+            vo.set("followerCount", followService.getFollowerCount(EntityType.ENTITY_USER, uid));
+            vo.set("followeeCount", followService.getFolloweeCount(uid, EntityType.ENTITY_USER));
+            vo.set("followed", followService.isFollower(localUserId, EntityType.ENTITY_USER, uid));
+            userInfos.add(vo);
+        }
+        return userInfos;
     }
 }

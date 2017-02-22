@@ -230,6 +230,67 @@ $(function () {
 	});
 
 	/**
+    *  关注用户
+    */
+    $(document).on('click','.follow',function(e){
+        var uid = $(e.target).attr('uid');
+        var followUp = $(e.target).next();
+        var msg = '';
+        var span = $(e.target);
+        $.post(followUrl, {uid : uid}, function (data) {
+            if (data.status == 1) {
+                span.text("取消关注");
+                span.removeClass("follow");
+                span.addClass("unfollow");
+                msg = '关注成功';
+            }
+
+            if (data.status == 0) {
+                msg = '操作失败';
+            }
+
+            followUp.html(msg).fadeIn();
+            setTimeout(function () {
+                followUp.fadeOut();
+            }, 3000);
+
+        }, 'json');
+
+    });
+
+
+	/**
+    *  取消关注
+    */
+    $(document).on('click','.unfollow',function(e){
+        var uid = $(e.target).attr('uid');
+        var followUp = $(e.target).next();
+        var msg = '';
+        var span = $(e.target);
+        $.post(unfollowUrl, {uid : uid}, function (data) {
+            if (data.status == 1) {
+                span.text("关注");
+                span.removeClass("unfollow");
+                span.addClass("follow");
+                msg = '取消关注成功';
+            }
+
+            if (data.status == 0) {
+                msg = '操作失败';
+            }
+
+            followUp.html(msg).fadeIn();
+            setTimeout(function () {
+                followUp.fadeOut();
+            }, 3000);
+
+        }, 'json');
+
+    });
+
+
+
+	/**
 	 * 评论框处理
 	 */
 	//点击评论时异步提取数据

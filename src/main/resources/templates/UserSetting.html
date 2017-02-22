@@ -10,8 +10,8 @@
 <script type="text/javascript" src='../Uploadify/jquery.uploadify.min.js'></script>
 <script type="text/javascript" src='../Js/jquery-validate.js'></script>
 <script type='text/javascript'>
-        var address = "$!{user.location}";
-        var constellation = "$!{user.constellation}";
+        var address = "$!{userinfo.location}";
+        var constellation = "$!{userinfo.constellation}";
         var PUBLIC = '..';
         var uploadUrl = '/UploadFile/UploadFace';
         var sid = '$!{user.id}';
@@ -33,7 +33,7 @@
             <li>修改密码</li>
         </ul>
         <div class='form'>
-            <form action="{:U('editBasic')}" method='post'>
+            <form action="/editBasic" method='post'>
                 <p>
                     <label for=""><span class='red'>*</span>昵称：</label>
                     <input type="text" name='nickname' value='$!{userinfo.nickname}' class='input'/>
@@ -106,7 +106,7 @@
             </form>
         </div>
         <div class='form hidden'>
-            <form action="{:U('editPwd')}" method='post' name='editPwd'>
+            <form action="/editPwd" method='post' name='editPwd'>
                 <p class='account'>登录邮箱：<span>admin@admin.com</span></p>
                 <p>
                     <label for=""><span class='red'>*</span>旧密码：</label>

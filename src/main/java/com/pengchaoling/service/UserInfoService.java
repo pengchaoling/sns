@@ -10,6 +10,7 @@ import com.pengchaoling.util.SnsUtil;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.HtmlUtils;
 
 import java.util.*;
 
@@ -25,6 +26,8 @@ public class UserInfoService {
     private UserInfoDAO userInfoDAO;
     @Autowired
     private LoginTicketDAO loginTicketDAO;
+    @Autowired
+    SensitiveService sensitiveService;
 
     public UserInfo getUserInfoByUid(int uid) {
         return userInfoDAO.selectUserInfoByUid(uid);
@@ -64,5 +67,16 @@ public class UserInfoService {
         userInfo.setFace180(face180);
         userInfo.setUid(uid);
         userInfoDAO.updateFace(userInfo);
+    }
+    /**
+     * 修改用户基本信息
+     */
+    public void updateBasic(UserInfo userInfo){
+        //敏感词以及html过滤
+        userInfo.setNickname(HtmlUtils.htmlEscape(sensitiveService.filter(userInfo.getNickname())));
+        userInfo.setTruename(HtmlUtils.htmlEscape(sensitiveService.filter(userInfo.getTruename())));
+        userInfo.setIntro(HtmlUtils.htmlEscape(sensitiveService.filter(userInfo.getIntro())));
+
+        userInfoDAO.updateBasic(userInfo);
     }
 }
