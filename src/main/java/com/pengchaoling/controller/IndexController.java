@@ -2,14 +2,8 @@ package com.pengchaoling.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.pengchaoling.model.FocusGroup;
-import com.pengchaoling.model.HostHolder;
-import com.pengchaoling.model.ViewObject;
-import com.pengchaoling.model.Weibo;
-import com.pengchaoling.service.FocusGroupService;
-import com.pengchaoling.service.UserInfoService;
-import com.pengchaoling.service.UserService;
-import com.pengchaoling.service.WeiboService;
+import com.pengchaoling.model.*;
+import com.pengchaoling.service.*;
 import com.pengchaoling.util.SnsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -45,6 +39,9 @@ public class IndexController {
     @Autowired
     UserInfoService userInfoService;
 
+    @Autowired
+    LikeService likeService;
+
 
     @RequestMapping(path = {"/", "/index"}, method = {RequestMethod.GET, RequestMethod.POST})
     public String index(Model model,@RequestParam(value = "p",required = false,defaultValue ="1") int p) {
@@ -60,6 +57,10 @@ public class IndexController {
                 vo.set("weibo",weibo);
                 vo.set("userinfo", userInfoService.getUserInfoByUid(weibo.getUid()));
                 vo.set("picture",weiboService.selectPictureByWid(weibo.getId()));
+                //获取是否已点赞
+                vo.set("liked", likeService.getLikeStatus(hostHolder.getUser().getId(), EntityType.ENTITY_WEIBO, weibo.getId()));
+                vo.set("likeCount", likeService.getLikeCount(EntityType.ENTITY_WEIBO, weibo.getId()));
+
                 //如果是转发的，则获取原微博
                 if(weibo.getIsturn()>0){
                     vo.set("weiboTurn",weiboService.selectWeiboById(weibo.getIsturn()));

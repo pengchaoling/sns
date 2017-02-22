@@ -8,6 +8,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -18,6 +19,8 @@ import com.github.pagehelper.PageHelper;
 @EnableTransactionManagement
 public class MyBatisConfig implements TransactionManagementConfigurer {
 
+    private static String MYBATIS_CONFIG = "mybatis-config.xml";
+
     @Autowired
     DataSource dataSource;
 
@@ -26,6 +29,8 @@ public class MyBatisConfig implements TransactionManagementConfigurer {
     @Bean(name = "sqlSessionFactory")
     public SqlSessionFactory sqlSessionFactoryBean() {
         SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
+        /** 设置mybatis configuration 扫描路径 */
+        bean.setConfigLocation(new ClassPathResource(MYBATIS_CONFIG));
         bean.setDataSource(dataSource);
         // 分页插件
         PageHelper pageHelper = new PageHelper();
@@ -37,6 +42,9 @@ public class MyBatisConfig implements TransactionManagementConfigurer {
         pageHelper.setProperties(props);
         // 添加插件
         bean.setPlugins(new Interceptor[] { pageHelper });
+
+
+
         try {
             return bean.getObject();
         } catch (Exception e) {

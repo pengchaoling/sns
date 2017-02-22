@@ -12,7 +12,7 @@ public class FocusGroup {
     private String name;
     private int uid;
 
-
+    public FocusGroup(){}
 
     public int getId() {
         return id;

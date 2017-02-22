@@ -15,6 +15,7 @@ $(function () {
 		buttonImage : PUBLIC + '/Uploadify/browse-btn.png',	//上传按钮背景图地址
 		fileTypeDesc : 'Image File',	//选择文件提示文字
 		fileTypeExts : '*.jpeg; *.jpg; *.png; *.gif',	//允许选择的文件类型
+		formData : {'session_id' : sid},
 		//上传成功后的回调函数
 		onUploadSuccess : function (file, data, response) {
 			eval('var data = ' + data);
@@ -194,6 +195,39 @@ $(function () {
 		
 	});
 
+
+	/**
+	 * 微博点赞
+	 */
+	$('.like').click(function () {
+		var wid = $(this).attr('wid');
+		var likeUp = $(this).next();
+		var msg = '';
+		var span = $(this);
+		$.post(likeUrl, {wid : wid}, function (data) {
+			if (data.status == 1) {
+				span.text("取消赞("+data.msg+")");
+				msg = '点赞成功';
+			}
+
+			if (data.status == -1) {
+				span.text("赞("+data.msg+")");
+				msg = '取消赞成功';
+			}
+
+			if (data.status == 0) {
+				msg = '操作失败';
+			}
+
+
+			likeUp.html(msg).fadeIn();
+			setTimeout(function () {
+				likeUp.fadeOut();
+			}, 3000);
+
+		}, 'json');
+
+	});
 
 	/**
 	 * 评论框处理
