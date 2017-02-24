@@ -459,6 +459,7 @@
 #middle .weibo .wb_turn .turn_cons p{
 	width:518px;
 	line-height: 24px;
+	min-height:24px;
 	height:auto;
 	word-wrap: break-word;
 }

@@ -1,9 +1,10 @@
 package com.pengchaoling.dao;
 
 import com.pengchaoling.model.Comment;
-import com.pengchaoling.model.User;
-import com.pengchaoling.model.Weibo;
-import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -26,6 +27,9 @@ public interface CommentDAO {
 
     @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, "where wid = #{wid} order by id desc"})
     List<Comment> selectCommentsByWid(@Param("wid") int wid);
+
+    @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, "where id = #{id}"})
+    Comment getCommentById(@Param("id") int id);
 
 
 }

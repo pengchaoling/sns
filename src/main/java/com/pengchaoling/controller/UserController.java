@@ -28,21 +28,20 @@ public class UserController {
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
     @Autowired
     HostHolder hostHolder;
-
     @Autowired
     UserService userService;
-
     @Autowired
     UserInfoService userInfoService;
-
     @Autowired
     WeiboService weiboService;
-
     @Autowired
     LikeService likeService;
-
     @Autowired
     FollowService followService;
+    @Autowired
+    AtmeService atmeService;
+    @Autowired
+    CommentService commentService;
 
     @RequestMapping(value = "/profile/{uid}", method = {RequestMethod.GET})
     public String profile(Model model, @PathVariable("uid") int uid,@RequestParam(value = "p",required = false,defaultValue ="1") int p) {
@@ -128,4 +127,62 @@ public class UserController {
         }
         return userInfos;
     }
+
+    @RequestMapping(value = "/atme", method = {RequestMethod.GET})
+    public String atme(Model model,@RequestParam(value = "p",required = false,defaultValue ="1") int p) {
+        String url = "/atme/";
+
+        //开始分页
+        PageHelper.startPage(p, 15);
+
+        List<Atme> atmes = atmeService.getAtmeByUid(hostHolder.getUser().getId());
+        List<ViewObject> vos = new ArrayList<ViewObject>();
+        //个人微博列表
+
+        if(!atmes.isEmpty()){
+            for(Atme atme : atmes){
+                ViewObject vo = new ViewObject();
+                //如果是微博
+                if(atme.getEntityType() == EntityType.ENTITY_WEIBO){
+                    Weibo weibo = weiboService.selectWeiboById(atme.getEntityId());
+                    vo.set("weibo",weibo);
+                    vo.set("userinfo", userInfoService.getUserInfoByUid(weibo.getUid()));
+                    vo.set("picture",weiboService.selectPictureByWid(weibo.getId()));
+                    //获取是否已点赞
+                    vo.set("liked", likeService.getLikeStatus(hostHolder.getUser().getId(), EntityType.ENTITY_WEIBO, weibo.getId()));
+                    vo.set("likeCount", likeService.getLikeCount(EntityType.ENTITY_WEIBO, weibo.getId()));
+
+                    //如果是转发的，则获取原微博
+                    if(weibo.getIsturn()>0){
+                        vo.set("weiboTurn",weiboService.selectWeiboById(weibo.getIsturn()));
+                        if(weiboService.selectWeiboById(weibo.getIsturn())!=null){
+                            vo.set("userTurn",userInfoService.getUserInfoByUid(weiboService.selectWeiboById(weibo.getIsturn()).getUid()));
+                            vo.set("pictureTurn",weiboService.selectPictureByWid(weibo.getIsturn()));
+                            vo.set("turnLikeCount", likeService.getLikeCount(EntityType.ENTITY_WEIBO, weibo.getIsturn()));
+                        }
+                    }
+                    vos.add(vo);
+
+                }else if(atme.getEntityType() == EntityType.ENTITY_COMMENT){
+                 //如果是评论
+                    Comment comment = commentService.getCommentById(atme.getEntityId());
+                    vo.set("userinfo", userInfoService.getUserInfoByUid(comment.getUid()));
+                    vo.set("comment",comment);
+                    vos.add(vo);
+                }
+            }
+        }
+
+
+        //微博列表分页字符串
+        PageInfo page = new PageInfo(atmes);
+        String pageStr = SnsUtil.showPage(page,url,"?p");
+        model.addAttribute("pageStr",pageStr);
+        model.addAttribute("vos",vos);
+        return "atme";
+    }
+
+
+
+
 }

@@ -1,16 +1,22 @@
 package com.pengchaoling.service;
 
+import com.pengchaoling.async.EventModel;
+import com.pengchaoling.async.EventProducer;
+import com.pengchaoling.async.EventType;
 import com.pengchaoling.dao.KeepDAO;
 import com.pengchaoling.dao.PictureDAO;
 import com.pengchaoling.dao.WeiboDAO;
-import com.pengchaoling.model.Keep;
-import com.pengchaoling.model.Picture;
-import com.pengchaoling.model.Weibo;
+import com.pengchaoling.model.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.HtmlUtils;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Author: Lying
@@ -19,6 +25,8 @@ import java.util.List;
  */
 @Service
 public class WeiboService {
+    private static final Logger logger = LoggerFactory.getLogger(WeiboService.class);
+
     @Autowired
     WeiboDAO weiboDAO;
     @Autowired
@@ -27,13 +35,28 @@ public class WeiboService {
     KeepDAO keepDAO;
     @Autowired
     SensitiveService sensitiveService;
+    @Autowired
+    EventProducer eventProducer;
+    @Autowired
+    HostHolder hostHolder;
+    @Autowired
+    UserInfoService userInfoService;
+
 
     public int addWeibo(Weibo weibo){
         //html过滤
         weibo.setContent(HtmlUtils.htmlEscape(weibo.getContent()));
         //敏感词 过滤掉
         weibo.setContent(sensitiveService.filter(weibo.getContent()));
-        return weiboDAO.addWeibo(weibo);
+        int res = weiboDAO.addWeibo(weibo);
+        if(res>0) {
+            //提交到异步事件队列去处理
+            eventProducer.fireEvent(new EventModel(EventType.ADDWEIBO)
+                    .setActorId(hostHolder.getUser().getId()).setEntityId(weibo.getId())
+                    .setEntityType(EntityType.ENTITY_WEIBO).setEntityOwnerId(weibo.getUid())
+                    .setExt("content", String.valueOf(weibo.getContent())));
+        }
+        return res;
     }
 
     public int addPicture(Picture picture){
@@ -45,15 +68,38 @@ public class WeiboService {
     }
 
     public Weibo selectWeiboById(int id){
-        return weiboDAO.selectWeiBoById(id);
+        Weibo weibo = weiboDAO.selectWeiBoById(id);
+        weibo.setContent(replaceAtme(weibo.getContent()));
+        return weibo;
     }
 
     public List<Weibo>  selectWeibos(){
-        return weiboDAO.selectWeibos();
+        List<Weibo> weibos = weiboDAO.selectWeibos();
+        List<Weibo> news = new ArrayList<Weibo>();
+        if(!weibos.isEmpty()){
+            for(Weibo weibo : weibos){
+                String content = replaceAtme(weibo.getContent());
+                weibo.setContent(content);
+                news.add(weibo);
+            }
+        }
+
+        return news;
     }
 
     public List<Weibo> selectWeibosByUid(int uid){
-        return weiboDAO.selectWeibosByUid(uid);
+
+        List<Weibo> weibos = weiboDAO.selectWeibosByUid(uid);
+        List<Weibo> news = new ArrayList<Weibo>();
+        if(!weibos.isEmpty()){
+            for(Weibo weibo : weibos){
+                String content = replaceAtme(weibo.getContent());
+                weibo.setContent(content);
+                news.add(weibo);
+            }
+        }
+
+        return news;
     }
 
     public void IncTurn(int wid){
@@ -83,6 +129,21 @@ public class WeiboService {
 
     public void delectWeiboByWid(int wid){
         weiboDAO.deleteWeiboById(wid);
+    }
+
+    //辅助方法 提供给本类使用，替换@用户名
+    private String replaceAtme(String content){
+        //正则表达式匹配出所有AT用户
+        Pattern pt = Pattern.compile("@(([\\u4E00-\\u9FA5]|[\\uFE30-\\uFFA0]|[a-zA-Z])+(|\\s|，|。|？|；|！|‘|’|“|”)+?)");
+        Matcher mt = pt.matcher(content);
+        while (mt.find()) {
+            UserInfo userInfo = userInfoService.getUserInfoByNickname(mt.group().replace("@",""));
+            if(userInfo != null){
+                String str = "<a href='/profile/"+userInfo.getUid()+"'>"+mt.group()+"</a>";
+                content = content.replace(mt.group(),str);
+            }
+        }
+        return content;
     }
 
 }

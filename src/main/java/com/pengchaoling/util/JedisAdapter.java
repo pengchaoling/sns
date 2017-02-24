@@ -164,7 +164,42 @@ public class JedisAdapter implements InitializingBean {
     }
 
     /**
-     * Sorted List操作，添加元素到集合，元素在集合中存在，则更新score
+     * list 保留指定位置的key  其他全部删掉 比如itrim(0,10);则是保留第0个到第10个元素 其他都删了
+     */
+    public String ltrim(String key,int start,int end){
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.ltrim(key,start,end);
+        } catch (Exception e) {
+            logger.error("发生异常" + e.getMessage());
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+        return null;
+    }
+    /**
+     * 返回key对应的list的长度
+     */
+    public long llen(String key){
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.llen(key);
+        } catch (Exception e) {
+            logger.error("发生异常" + e.getMessage());
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+        return 0;
+    }
+
+    /**
+     * Sorted set操作，添加元素到集合，元素在集合中存在，则更新score
      * @param key       集合名称
      * @param score     序号
      * @param value     元素名称

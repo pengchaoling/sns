@@ -41,7 +41,7 @@ public class LikeHandler implements EventHandler {
             message.setCreatedDate(new Date());
             message.setHasRead(0);
             UserInfo userInfo = userInfoService.getUserInfoByUid(model.getActorId());
-            message.setContent(userInfo.getNickname() + "赞了你的微博\"" + model.getExt("weibo")+"\"");
+            message.setContent(userInfo.getNickname() + "赞了你的微博\"" + model.getExt("content")+"\"");
             messageService.addMessage(message);
         }catch (Exception e){
             e.printStackTrace();

@@ -13,7 +13,8 @@ public enum EventType {
     FOLLOW(4),      //关注
     UNFOLLOW(5),    //取消关注
     ADDWEIBO(6),    //新增微博
-    ADDUSER(7);     //增加用户
+    ADDUSER(7),     //增加用户
+    ADDCOMMENT(8);  //增加评论
 
     private int value;
     EventType(int value) { this.value = value; }

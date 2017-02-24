@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * Author: Lying
  * Data: 2017-02-24
- * description: 新增微博时候的异步处理
+ * description: 新增微博的时候新增索引
  */
 @Component
 public class AddWeiboHandler implements EventHandler {
@@ -27,7 +27,7 @@ public class AddWeiboHandler implements EventHandler {
     public void doHandle(EventModel model) {
         try {
             searchService.indexWeibo(model.getEntityId(),
-                    model.getExt("weibo"));
+                    model.getExt("content"));
         } catch (Exception e) {
             logger.error("增加微博索引失败");
         }

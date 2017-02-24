@@ -1,8 +1,6 @@
 package com.pengchaoling.controller;
 
-import com.pengchaoling.async.EventModel;
 import com.pengchaoling.async.EventProducer;
-import com.pengchaoling.async.EventType;
 import com.pengchaoling.model.*;
 import com.pengchaoling.service.CommentService;
 import com.pengchaoling.service.UserInfoService;
@@ -68,12 +66,6 @@ public class WeiboController {
                     picture.setWid(weibo.getId());
                     weiboService.addPicture(picture);
                 }
-
-                //提交到异步事件队列去处理
-                eventProducer.fireEvent(new EventModel(EventType.ADDWEIBO)
-                        .setActorId(hostHolder.getUser().getId()).setEntityId(weibo.getId())
-                        .setEntityType(EntityType.ENTITY_WEIBO).setEntityOwnerId(weibo.getUid())
-                        .setExt("weibo", String.valueOf(weibo.getContent())));
 
                 //微博数加一
                 userInfoService.IncWeibo(hostHolder.getUser().getId());

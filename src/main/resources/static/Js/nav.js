@@ -249,7 +249,7 @@ $(function () {
 	 })
 
 	//消息推送回调函数
-	get_msg(getMsgUrl);
+	//get_msg(getMsgUrl);
  
 	
 });
@@ -260,6 +260,7 @@ $(function () {
 /**
  * 异步轮询函数
  */
+/*
 function get_msg (url) {
 	$.getJSON(url, function (data) {
 		if (data.status) {
@@ -273,7 +274,7 @@ function get_msg (url) {
 		}, 5000);
 	});
 }
-
+*/
 /**
  * 推送的新消息
  * @param  {[type]} json {total:新消息的条数,type:（1：评论，2：私信，3：@我）}

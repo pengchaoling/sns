@@ -15,11 +15,11 @@ import java.util.List;
 /**
  * Author: Lying
  * Data: 2017-02-24
- * description: 新增用户
+ * description: 新增用户 新增索引
  */
 @Component
 public class AddUserHandler implements EventHandler {
-    private static final Logger logger = LoggerFactory.getLogger(AddWeiboHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(AddUserHandler.class);
     @Autowired
     SearchService searchService;
 

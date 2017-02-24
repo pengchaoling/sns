@@ -313,8 +313,12 @@
 #middle .weibo .content p{
 	width:490px;
 	line-height: 24px;
+	min-height:24px;
 	height:auto;
 	word-wrap: break-word;
+}
+#middle .weibo .content p a{
+    line-height:24px;
 }
 #middle .weibo .wb_img{
 	width:490px;
@@ -515,6 +519,7 @@
 #middle .weibo .wb_turn .turn_cons p{
 	width:448px;
 	line-height: 24px;
+	min-height:24px;
 	height:auto;
 	word-wrap: break-word;
 }
