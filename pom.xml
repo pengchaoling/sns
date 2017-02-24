@@ -44,6 +44,12 @@
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
+		<!--solr-->
+		<dependency>
+			<groupId>org.apache.solr</groupId>
+			<artifactId>solr-solrj</artifactId>
+			<version>6.2.0</version>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-aop</artifactId>

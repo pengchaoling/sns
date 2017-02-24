@@ -233,6 +233,7 @@ $(function () {
     *  关注用户
     */
     $(document).on('click','.follow',function(e){
+           alert(11);return;
         var uid = $(e.target).attr('uid');
         var followUp = $(e.target).next();
         var msg = '';

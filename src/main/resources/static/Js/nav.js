@@ -134,95 +134,68 @@ $(function () {
     });
 
 
-    //创建好友分组
-   $('#create_group').click(function () {
-   		var groupLeft = ($(window).width() - $('#add-group').width()) / 2;
-	 	var groupTop = $(document).scrollTop() + ($(window).height() - $('#add-group').height()) / 2;
-   		var gpObj = $('#add-group').show().css({
-	 		'left' : groupLeft,
-	 		'top' : groupTop
-	 	});
-   		createBg('group-bg');
-   		drag(gpObj, gpObj.find('.group_head'));
-   });
-   //异步创建分组
-   $('.add-group-sub').click(function () {
-   		var groupName = $('#gp-name').val();
-   		if (groupName != '') {
-   			$.post(addGroup, {name : groupName}, function (data) {
-   				if (data.status) {
-   					showTips(data.msg);
-   					$('#add-group').hide();
-   					$('#group-bg').remove();
-   				} else {
-   					alert(data.msg);
-   				}
-   			}, 'json');
-   		}
-   });
-   //关闭
-   $('.group-cencle').click(function () {
-   		$('#add-group').hide();
-   		$('#group-bg').remove();
-   });
+/**
+    *  关注用户
+    */
+    $(document).on('click','.follow',function(e){
+
+        var uid = $(e.target).attr('uid');
+        var followUp = $(e.target).next();
+        var msg = '';
+        var span = $(e.target);
+        $.post(followUrl, {uid : uid}, function (data) {
+            if (data.status == 1) {
+                span.text("取消关注");
+                span.removeClass("follow");
+                span.removeClass("add-fl");
+                span.addClass("unfollow");
+                msg = '关注成功';
+            }
+
+            if (data.status == 0) {
+                msg = '操作失败';
+            }
+
+            followUp.html(msg).fadeIn();
+            setTimeout(function () {
+                followUp.fadeOut();
+            }, 3000);
+
+        }, 'json');
+
+    });
+
+/**
+    *  取消关注
+    */
+    $(document).on('click','.unfollow',function(e){
+        var uid = $(e.target).attr('uid');
+        var followUp = $(e.target).next();
+        var msg = '';
+        var span = $(e.target);
+        $.post(unfollowUrl, {uid : uid}, function (data) {
+            if (data.status == 1) {
+                span.text("关注");
+                span.removeClass("unfollow");
+                span.addClass("follow");
+                span.addClass("add-fl");
+                msg = '取消关注成功';
+            }
+
+            if (data.status == 0) {
+                msg = '操作失败';
+            }
+
+            followUp.html(msg).fadeIn();
+            setTimeout(function () {
+                followUp.fadeOut();
+            }, 3000);
+
+        }, 'json');
+
+    });
 
 
-    //好友关注
-   $('.add-fl').click(function () {
-   		var followLeft = ($(window).width() - $('#follow').width()) / 2;
-	 	var followTop = $(document).scrollTop() + ($(window).height() - $('#follow').height()) / 2;
-   		var flObj = $('#follow').show().css({
-	 		'left' : followLeft,
-	 		'top' : followTop
-	 	});
-   		createBg('follow-bg');
-   		drag(flObj, flObj.find('.follow_head'));
-   		$('input[name=follow]').val($(this).attr('uid'));
-   });
-   //添加关注
-   $('.add-follow-sub').click(function () {
-   		var follow = $('input[name=follow]').val();
-   		var group = $('select[name=gid]').val();
-   		$.post(addFollow, {
-   			'follow' : follow,
-   			'gid' : group
-   		}, function (data) {
-   			if (data.status) {
-   				$('.add-fl[uid=' + follow + ']').removeClass('add-fl').html('√&nbsp;已关注');
-   				$('#follow').hide();
-   				$('#follow-bg').remove();
-   			} else {
-   				alert(data.msg);
-   			}
-   		}, 'json');
-   });
-   //关闭关注框
-   $('.follow-cencle').click(function () {
-   		$('#follow').hide();
-   		$('#follow-bg').remove();
-   });
-
-   //移除关注与粉丝
-   $('.del-follow').click(function () {
-   		var data = {
-   			uid : $(this).attr('uid'),
-   			type : $(this).attr('type')
-   		};
-   		var isDel = confirm('确认移除?');
-   		var obj = $(this).parents('li');
-
-   		if (isDel) {
-   			$.post(delFollow, data, function (data) {
-   				if (data) {
-   					obj.slideUp('slow', function () {
-   						obj.remove();
-   					})
-   				} else {
-   					alert('移除失败请重试...');
-   				}
-   			}, 'json');
-   		}
-   });
 
    //搜索切换
    $('.sech-type').click(function () {

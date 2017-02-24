@@ -1,18 +1,11 @@
 package com.pengchaoling.service;
 
-import com.pengchaoling.dao.UserDAO;
 import com.pengchaoling.dao.LoginTicketDAO;
 import com.pengchaoling.dao.UserInfoDAO;
-import com.pengchaoling.model.LoginTicket;
-import com.pengchaoling.model.User;
 import com.pengchaoling.model.UserInfo;
-import com.pengchaoling.util.SnsUtil;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.HtmlUtils;
-
-import java.util.*;
 
 /**
  * Author: Lying
@@ -32,6 +25,11 @@ public class UserInfoService {
     public UserInfo getUserInfoByUid(int uid) {
         return userInfoDAO.selectUserInfoByUid(uid);
     }
+    //这是根据userinfo表的主键id来的
+    public UserInfo getUserInfoById(int id) {
+        return userInfoDAO.selectUserInfoById(id);
+    }
+
 
     public UserInfo getUserInfoByNickname(String nickname){
         return userInfoDAO.selectUserInfoByNickname(nickname);

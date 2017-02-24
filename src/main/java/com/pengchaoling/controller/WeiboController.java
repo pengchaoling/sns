@@ -1,10 +1,12 @@
 package com.pengchaoling.controller;
 
+import com.pengchaoling.async.EventModel;
+import com.pengchaoling.async.EventProducer;
+import com.pengchaoling.async.EventType;
 import com.pengchaoling.model.*;
 import com.pengchaoling.service.CommentService;
 import com.pengchaoling.service.UserInfoService;
 import com.pengchaoling.service.WeiboService;
-import com.pengchaoling.util.SnsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,14 +16,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.HtmlUtils;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Author: Lying
@@ -39,6 +39,8 @@ public class WeiboController {
     WeiboService weiboService;
     @Autowired
     CommentService commentService;
+    @Autowired
+    EventProducer eventProducer;
 
     /**
      *  微博发布处理
@@ -66,6 +68,12 @@ public class WeiboController {
                     picture.setWid(weibo.getId());
                     weiboService.addPicture(picture);
                 }
+
+                //提交到异步事件队列去处理
+                eventProducer.fireEvent(new EventModel(EventType.ADDWEIBO)
+                        .setActorId(hostHolder.getUser().getId()).setEntityId(weibo.getId())
+                        .setEntityType(EntityType.ENTITY_WEIBO).setEntityOwnerId(weibo.getUid())
+                        .setExt("weibo", String.valueOf(weibo.getContent())));
 
                 //微博数加一
                 userInfoService.IncWeibo(hostHolder.getUser().getId());

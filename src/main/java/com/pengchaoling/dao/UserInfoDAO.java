@@ -3,8 +3,6 @@ package com.pengchaoling.dao;
 import com.pengchaoling.model.UserInfo;
 import org.apache.ibatis.annotations.*;
 
-import java.util.List;
-
 /**
  * Author: Lying
  * Data: 2017-02-17
@@ -23,6 +21,9 @@ public interface UserInfoDAO {
 
     @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where uid=#{uid}"})
     UserInfo selectUserInfoByUid(@Param("uid") int uid);
+
+    @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where id=#{id}"})
+    UserInfo selectUserInfoById(@Param("id") int id);
 
     @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where nickname=#{nickname}"})
     UserInfo selectUserInfoByNickname(String nickname);

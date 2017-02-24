@@ -1,0 +1,278 @@
+#parse("./common/header.html")
+<title>微博系统-微博搜索</title>
+<link rel="stylesheet" href="../Theme/default/Css/nav.css" />
+<link rel="stylesheet" href="../Theme/default/Css/sech_weibo.css" />
+<link rel="stylesheet" href="../Theme/default/Css/bottom.css" />
+<script type="text/javascript" src='../Js/jquery-1.7.2.min.js'></script>
+<script type="text/javascript" src='../Js/nav.js'></script>
+<script type="text/javascript" src='../Js/sech-weibo.js'></script>
+<script type='text/javascript' src='../Js/index.js'></script>
+<style type="text/css">em{color:red;}</style>
+<script type='text/javascript'>
+        var PUBLIC = '..';
+        var uploadUrl = '/UploadFile/UploadPic';
+        var ROOT = '/img/';
+        var commentUrl = "/addComment";
+        var getComment = '/getComment';
+        var keepUrl = '/keep';
+        var delWeibo = '/delWeibo';
+        var likeUrl = '/like';
+        var sid = '$!{user.id}';
+        var followUrl = '/followUser';
+        var unfollowUrl = '/unfollowUser';
+    </script>
+#parse("./common/nav.html")
+<!--==========顶部固定导行条==========-->
+<!--==========内容主体==========-->
+<div style='height:60px;opcity:10'></div>
+<div class="main">
+    <!--=====左侧=====-->
+    #parse("./common/left.html")
+    <!--=====右侧=====-->
+    <div id='right'>
+        <p id='sech-logo'></p>
+        <div id='sech'>
+            <div>
+                <form action="/Search/searchUser" method='get' name='search'>
+                    <input type="text" name='keyword' id='sech-cons' value='#if("$!keyword"!="")$!{keyword}#else搜索微博、找人#end'/>
+                    <input type="submit" value='搜&nbsp;索' id='sech-sub'/>
+                </form>
+            </div>
+            <ul>
+                <li><span class='cur sech-type' url="/Search/searchUser">找人</span></li>
+                <li><span class='sech-type' url="/Search/searchWeibo">微博</span></li>
+            </ul>
+        </div>
+
+        <div id='content'>
+
+        <div class='view_line'>
+            <strong>微博</strong>
+        </div>
+        #if($vos.isEmpty())
+        没有发布的微博
+        #else
+        #foreach($vo in $vos)
+
+        #if("$!vo.weibo.isturn" == 0)
+        <!--====================普通微博样式=========================-->
+        <div class="weibo">
+            <!--头像-->
+            <div class="face">
+                <a href="/profile/$!{vo.userinfo.uid}">
+                    <img src="#if("$!vo.userinfo.face50" != "")/img/$!{vo.userinfo.face50} #else ../Images/noface.gif #end" width='50' height='50'/>
+                </a>
+            </div>
+            <div class="wb_cons">
+                <dl>
+                    <!--用户名-->
+                    <dt class='author'>
+                        <a href="/profile/$!{vo.userinfo.uid}">$!{vo.userinfo.nickname}</a>
+                    </dt>
+                    <!--发布内容-->
+                    <dd class='content'>
+                        <p>$!{vo.weibo.content}</p>
+                    </dd>
+                    <!--微博图片-->
+
+                    #if("$!vo.picture.max" != "")
+                    <dd>
+                        <div class='wb_img'>
+                            <!--小图-->
+                            <img src="/img/$!{vo.picture.mini}" class='mini_img'/>
+                            <div class="img_tool hidden">
+                                <ul>
+                                    <li>
+                                        <i class='icon icon-packup'></i>
+                                        <span class='packup'>&nbsp;收起</span>
+                                    </li>
+                                    <li>|</li>
+                                    <li>
+                                        <i class='icon icon-bigpic'></i>
+                                        <a href="/img/$!{vo.picture.max}" target='_blank'>&nbsp;查看大图</a>
+                                    </li>
+                                </ul>
+                                <!--中图-->
+                                <div class="img_info"><img src="/img/$!{vo.picture.medium}"/></div>
+                            </div>
+                        </div>
+                    </dd>
+                    #end
+                </dl>
+                <!--操作-->
+                <div class="wb_tool">
+                    <!--发布时间-->
+                    <span class="send_time">$date.format('yyyy-MM-dd HH:mm:ss', $!{vo.weibo.time})</span>
+                    <ul>
+                        #if($!user.id == $!vo.userinfo.uid)
+                        <li class='del-li hidden'><span class='del-weibo' wid='$!{vo.weibo.id}'>删除</span></li>
+                        <li class='del-li hidden'>|</li>
+                        #end
+                        <li class='keep-wrap'>
+                            <span class='like' wid='$!{vo.weibo.id}'>#if($!vo.liked == 0)赞($!{vo.likeCount}) #else 取消赞($!{vo.likeCount}) #end</span>
+                            <div class='keep-up hidden'></div>
+                        </li>
+                        <li>|</li>
+                        <li><span class='turn' id='$!{vo.weibo.id}'>转发($!{vo.weibo.turn})</span></li>
+                        <li>|</li>
+                        <li class='keep-wrap'>
+                            <span class='keep' wid='$!{vo.weibo.id}'>收藏($!{vo.weibo.keep})</span>
+                            <div class='keep-up hidden'></div>
+                        </li>
+                        <li>|</li>
+                        <li><span class='comment' wid='$!{vo.weibo.id}'>评论($!{vo.weibo.comment})</span></li>
+                    </ul>
+                </div>
+                <!--=====回复框=====-->
+                <div class='comment_load hidden'>
+                    <img src="../Images/loading.gif">评论加载中，请稍候...
+                </div>
+                <div class='comment_list hidden'>
+                    <textarea name="" sign='comment{$key}'></textarea>
+                    <ul>
+                        <li class='phiz fleft' sign='comment{$key}'></li>
+                        <li class='comment_turn fleft'>
+                            <label>
+                                <input type="checkbox" name=''/>同时转发到我的微博
+                            </label>
+                        </li>
+                        <li class='comment_btn fright' wid='$!{vo.weibo.id}' uid='$!{vo.userinfo.uid}'>评论</li>
+                    </ul>
+                </div>
+                <!--=====回复框结束=====-->
+            </div>
+        </div>
+        #else
+        <!--====================转发样式====================-->
+        <div class="weibo">
+            <!--头像-->
+            <div class="face">
+                <a href="/profile/$!{vo.userinfo.uid}">
+                    <img src="#if("$!vo.userinfo.face50" != "")/img/$!{vo.userinfo.face50} #else ../Images/noface.gif #end" width='50' height='50' />
+                </a>
+            </div>
+            <div class="wb_cons">
+                <dl>
+                    <!--用户名-->
+                    <dt class='author'>
+                        <a href="/profile/$!{vo.userinfo.uid}" id="author_$!{vo.weibo.id}">$!{vo.userinfo.nickname}</a>
+                    </dt>
+                    <!--发布内容-->
+                    <dd class='content'>
+                        <p>$!{vo.weibo.content}</p>
+                    </dd>
+                    <!--转发的微博内容-->
+                    #if("$!vo.weiboTurn.id" =="")
+                    <dd class="wb_turn">该微博已被删除</dd>
+                    #else
+                    <dd>
+                        <div class="wb_turn">
+                            <dl>
+                                <!--原作者-->
+                                <dt class='turn_name'>
+                                    <a href="/profile/$!{vo.userTurn.uid}">@$!{vo.userTurn.nickname}</a>
+                                </dt>
+                                <!--原微博内容-->
+                                <dd class='turn_cons'>
+                                    <p>$!{vo.weiboTurn.content}</p>
+                                </dd>
+                                <!--原微博图片-->
+
+                                #if("$!vo.pictureTurn.max" != "")
+                                <dd>
+                                    <div class='wb_img'>
+                                        <!--小图-->
+                                        <img src="/img/$!{vo.pictureTurn.mini}" class='mini_img'/>
+                                        <div class="img_tool hidden">
+                                            <ul>
+                                                <li>
+                                                    <i class='icon icon-packup'></i>
+                                                    <span class='packup'>&nbsp;收起</span>
+                                                </li>
+                                                <li>|</li>
+                                                <li>
+                                                    <i class='icon icon-bigpic'></i>
+                                                    <a href="/img/$!{vo.pictureTurn.max}" target='_blank'>&nbsp;查看大图</a>
+                                                </li>
+                                            </ul>
+                                            <!--中图-->
+                                            <div class="img_info"><img src="/img/$!{vo.pictureTurn.medium}"/></div>
+                                        </div>
+                                    </div>
+                                </dd>
+                                #end
+                            </dl>
+                            <!--转发微博操作-->
+                            <div class="turn_tool">
+                                    <span class='send_time'>
+                                        $date.format('yyyy-MM-dd HH:mm:ss', $!{vo.weiboTurn.time})
+                                    </span>
+                                <ul>
+                                    <li><a href="javascript:">赞($!{vo.turnLikeCount})</a></li>
+                                    <li>|</li>
+                                    <li><a href="javascript:">转发($!{vo.weiboTurn.turn})</a></li>
+                                    <li>|</li>
+                                    <li><a href="javascript:">评论($!{vo.weiboTurn.comment})</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </dd>
+                    #end
+                </dl>
+                <!--操作-->
+                <div class="wb_tool">
+                    <!--发布时间-->
+                    <span class="send_time">
+                $date.format('yyyy-MM-dd HH:mm:ss', $!{vo.weibo.time})
+                        </span>
+                    <ul>
+                        #if($user.id == $vo.userinfo.uid)
+                        <li class='del-li hidden'><span class='del-weibo' wid='$!{vo.weibo.id}'>删除</span></li>
+                        <li class='del-li hidden'>|</li>
+                        #end
+                        <li class='keep-wrap'>
+                            <span class='like' wid='$!{vo.weibo.id}'>#if($!vo.liked == 0)赞($!{vo.likeCount}) #else 取消赞($!{vo.likeCount}) #end</span>
+                            <div class='keep-up hidden'></div>
+                        </li>
+                        <li>|</li>
+                        <li><span class='turn' id='$!{vo.weibo.id}' tid='$!{vo.weiboTurn.id}'>转发($!{vo.weibo.turn})</span></li>
+                        <li>|</li>
+                        <li class='keep-wrap'>
+                            <span class='keep' wid='$!{vo.weibo.id}'>收藏($!{vo.weibo.keep})</span>
+                            <div class='keep-up hidden'></div>
+                        </li>
+                        <li>|</li>
+                        <li><span class='comment' wid='$!{vo.weibo.id}'>评论($!{vo.weibo.comment})</span></li>
+                    </ul>
+                </div>
+                <!--回复框-->
+                <div class='comment_load hidden'>
+                    <img src="../Images/loading.gif">评论加载中，请稍候...
+                </div>
+                <div class='comment_list hidden'>
+                    <textarea name="" sign='comment$!{vo.weibo.id}'></textarea>
+                    <ul>
+                        <li class='phiz fleft' sign='comment$!{vo.weibo.id}'></li>
+                        <li class='comment_turn fleft'>
+                            <label>
+                                <input type="checkbox" name=''/>同时转发到我的微博
+                            </label>
+                        </li>
+                        <li class='comment_btn fright' wid='$!{vo.weibo.id}' uid='$!{vo.userinfo.uid}'>评论</li>
+                    </ul>
+                </div>
+                <!--回复框结束-->
+            </div>
+        </div>
+        <!--====================转发样式结束====================-->
+        #end
+        #end
+        #end
+    <div id='page'>目前搜索结果最多显示20条</div>
+</div>
+<!--====================转发样式结束====================-->
+</div>
+</div>
+<!--==========内容主体结束==========-->
+<!--==========底部==========-->
+#parse("./common/bottom.html")

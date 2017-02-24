@@ -35,17 +35,18 @@ public class FollowHandler implements EventHandler {
 
     @Override
     public void doHandle(EventModel model) {
-        Message message = new Message();
-        message.setFromId(SnsUtil.SYSTEM_USERID);
-        message.setToId(model.getEntityOwnerId());
-        message.setCreatedDate(new Date());
-        message.setHasRead(0);
-        UserInfo userInfo = userInfoService.getUserInfoByUid(model.getActorId());
-
-        message.setContent(userInfo.getNickname() + "关注了你");
-
-        messageService.addMessage(message);
-
+        try{
+            Message message = new Message();
+            message.setFromId(SnsUtil.SYSTEM_USERID);
+            message.setToId(model.getEntityOwnerId());
+            message.setCreatedDate(new Date());
+            message.setHasRead(0);
+            UserInfo userInfo = userInfoService.getUserInfoByUid(model.getActorId());
+            message.setContent(userInfo.getNickname() + "关注了你");
+            messageService.addMessage(message);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override

@@ -1,0 +1,89 @@
+#parse("./common/header.html")
+<title>微博系统-微博找人</title>
+<link rel="stylesheet" href="../Theme/default/Css/nav.css" />
+<link rel="stylesheet" href="../Theme/default/Css/sech_user.css" />
+<link rel="stylesheet" href="../Theme/default/Css/bottom.css" />
+<script type="text/javascript" src='../Js/jquery-1.7.2.min.js'></script>
+<script type="text/javascript" src='../Js/nav.js'></script>
+<style type="text/css">em{color:red;}</style>
+<script type='text/javascript'>
+        var sid = '$!{user.id}';
+        var followUrl = '/followUser';
+        var unfollowUrl = '/unfollowUser';
+    </script>
+<!--==========顶部固定导行条==========-->
+#parse("./common/nav.html")
+<!--==========内容主体==========-->
+<div style='height:60px;opcity:10'></div>
+<div class="main">
+    <!--=====左侧=====-->
+    #parse("./common/left.html")
+    <div id='right'>
+        <p id='sech-logo'></p>
+        <div id='sech'>
+            <div>
+                <form action="/Search/searchUser" method='get' name='search'>
+                    <input type="text" name='keyword' id='sech-cons' value='#if("$!keyword"!="")$!{keyword}#else搜索微博、找人#end'/>
+                    <input type="submit" value='搜&nbsp;索' id='sech-sub'/>
+                </form>
+            </div>
+            <ul>
+                <li><span class='cur sech-type' url="/Search/searchUser">找人</span></li>
+                <li><span class='sech-type' url="/Search/searchWeibo">微博</span></li>
+            </ul>
+        </div>
+
+            <div id='content'>
+                #if(!$vos.isEmpty())
+                    <div class='view_line'>
+                        <strong>用户</strong>
+                    </div>
+                    <ul>
+                        #foreach($vo in $vos)
+                            <li>
+                                <dl class='list-left'>
+                                    <dt>
+                                        <img src="#if("$!vo.userinfo.face80" != "")/img/$!{vo.userinfo.face80} #else ../Images/noface.gif #end" width='80' height='80'/>
+                                    </dt>
+                <dd>
+                    <a href="/profile/$!{vo.userinfo.uid}">$!{vo.nickname}</a>
+                </dd>
+                <dd>
+                    <i class='icon icon-boy'></i>&nbsp;
+                    <span>
+									#if("$vo.userinfo.location"!="")
+										$!{vo.userinfo.location}
+									#else
+										该用户未填写所在地
+									#end
+								</span>
+                </dd>
+                <dd>
+                    <span>关注 <a href="">($!{vo.followeeCount})</a></span>
+                    <span class='bd-l'>粉丝 <a href="">($!{vo.followerCount})</a></span>
+                    <span class='bd-l'>微博 <a href="">($!{vo.userinfo.weibo})</a></span>
+                </dd>
+                </dl>
+                <dl class='list-right' style="cursor: pointer;">
+                    #if($vo.followed)
+                    <dt class="unfollow"  uid='$!{vo.userinfo.uid}'>√&nbsp;已关注</dt>
+                    #else
+                    <dt class='add-fl follow' uid='$!{vo.userinfo.uid}'>+&nbsp;关注</dt>
+                    #end
+                    <div class='follow-up hidden'></div>
+                </dl>
+
+                </li>
+                #end
+                </ul>
+                <div style="text-align:center;padding:20px;">只显示前20条数据</div>
+                #else
+                <p style='text-indent:7em;'>未找到与<strong style='color:red'>{$keyword}</strong>相关的用户</p>
+        #end
+    </div>
+
+</div>
+</div>
+<!--==========内容主体结束==========-->
+<!--==========底部==========-->
+#parse("./common/bottom.html")

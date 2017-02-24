@@ -11,7 +11,9 @@ public enum EventType {
     WEIBO(2),       //微博
     MAIL(3),        //邮件
     FOLLOW(4),      //关注
-    UNFOLLOW(5);    //取消关注
+    UNFOLLOW(5),    //取消关注
+    ADDWEIBO(6),    //新增微博
+    ADDUSER(7);     //增加用户
 
     private int value;
     EventType(int value) { this.value = value; }

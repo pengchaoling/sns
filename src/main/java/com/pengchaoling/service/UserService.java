@@ -1,7 +1,11 @@
 package com.pengchaoling.service;
 
-import com.pengchaoling.dao.UserDAO;
+import com.pengchaoling.async.EventModel;
+import com.pengchaoling.async.EventProducer;
+import com.pengchaoling.async.EventType;
 import com.pengchaoling.dao.LoginTicketDAO;
+import com.pengchaoling.dao.UserDAO;
+import com.pengchaoling.model.EntityType;
 import com.pengchaoling.model.LoginTicket;
 import com.pengchaoling.model.User;
 import com.pengchaoling.model.UserInfo;
@@ -26,6 +30,8 @@ public class UserService {
     private LoginTicketDAO loginTicketDAO;
     @Autowired
     private UserInfoService userInfoService;
+    @Autowired
+    EventProducer eventProducer;
 
     public User getUserById(int id) {
         return userDAO.selectById(id);
@@ -93,6 +99,13 @@ public class UserService {
 
         //设置useInfo
         userInfoService.addDefaultUserInfo(nickname,user.getId());
+        UserInfo userInfo = userInfoService.getUserInfoByUid(user.getId());
+
+        //提交到异步事件队列去处理
+        eventProducer.fireEvent(new EventModel(EventType.ADDUSER)
+                .setActorId(userInfo.getId()).setEntityId(userInfo.getUid())
+                .setEntityType(EntityType.ENTITY_USER).setEntityOwnerId(userInfo.getUid())
+                .setExt("nickname", String.valueOf(userInfo.getNickname())));
 
         String ticket = addLoginTicket(user.getId());
         map.put("ticket", ticket);
