@@ -5,7 +5,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.security.MessageDigest;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Author: Lying
@@ -140,5 +143,77 @@ public class SnsUtil {
             logger.error("生成MD5失败", e);
             return null;
         }
+    }
+
+    /**
+     * 表情包替换
+     */
+    public static String emojiReplace(String content){
+
+        Map<String,String> hashmap = new HashMap<String,String>();
+        hashmap.put("hehe","呵呵");
+        hashmap.put("xixi","嘻嘻");
+        hashmap.put("haha","哈哈");
+        hashmap.put("keai","可爱");
+        hashmap.put("kelian","可怜");
+        hashmap.put("wabisi","挖鼻屎");
+        hashmap.put("chijing","吃惊");
+        hashmap.put("haixiu","害羞");
+        hashmap.put("jiyan","挤眼");
+        hashmap.put("bizui","闭嘴");
+        hashmap.put("bishi","鄙视");
+        hashmap.put("aini","爱你");
+        hashmap.put("lei","泪");
+        hashmap.put("touxiao","偷笑");
+        hashmap.put("qinqin","亲亲");
+        hashmap.put("shengbin","生病");
+        hashmap.put("taikaixin","太开心");
+        hashmap.put("ldln","懒得理你");
+        hashmap.put("youhenhen","右哼哼");
+        hashmap.put("zuohenhen","左哼哼");
+        hashmap.put("xiu","嘘");
+        hashmap.put("shuai","衰");
+        hashmap.put("weiqu","委屈");
+        hashmap.put("tu","吐");
+        hashmap.put("dahaqian","打哈欠");
+        hashmap.put("baobao","抱抱");
+        hashmap.put("nu","怒");
+        hashmap.put("yiwen","疑问");
+        hashmap.put("canzui","馋嘴");
+        hashmap.put("baibai","拜拜");
+        hashmap.put("sikao","思考");
+        hashmap.put("han","汗");
+        hashmap.put("kun","困");
+        hashmap.put("shuijiao","睡觉");
+        hashmap.put("qian","钱");
+        hashmap.put("shiwang","失望");
+        hashmap.put("ku","酷");
+        hashmap.put("huaxin","花心");
+        hashmap.put("heng","哼");
+        hashmap.put("guzhang","鼓掌");
+        hashmap.put("yun","晕");
+        hashmap.put("beishuang","悲伤");
+        hashmap.put("zuakuang","抓狂");
+        hashmap.put("heixian","黑线");
+        hashmap.put("yinxian","阴险");
+        hashmap.put("numa","怒骂");
+        hashmap.put("xin","心");
+        hashmap.put("shuangxin","伤心");
+
+        //正则匹配替换表情包
+        Pattern pt = Pattern.compile("\\[.*?\\]");
+        Matcher mt = pt.matcher(content);
+        while (mt.find()) {
+            for(String getKey: hashmap.keySet()){
+                String name = mt.group().replace("[","").replace("]","");
+                if(hashmap.get(getKey).equals(name)){
+                    String str = "<img src='../Images/phiz/"+getKey+".gif' title='"+name+"' />";
+                    content = content.replace(mt.group(),str);
+                }
+
+            }
+        }
+
+        return content;
     }
 }

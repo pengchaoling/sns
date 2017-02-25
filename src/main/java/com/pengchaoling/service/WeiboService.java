@@ -7,6 +7,7 @@ import com.pengchaoling.dao.KeepDAO;
 import com.pengchaoling.dao.PictureDAO;
 import com.pengchaoling.dao.WeiboDAO;
 import com.pengchaoling.model.*;
+import com.pengchaoling.util.SnsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -131,7 +132,7 @@ public class WeiboService {
         weiboDAO.deleteWeiboById(wid);
     }
 
-    //辅助方法 提供给本类使用，替换@用户名
+    //辅助方法 提供给本类使用，替换@用户名 以及替换 表情包
     private String replaceAtme(String content){
         //正则表达式匹配出所有AT用户
         Pattern pt = Pattern.compile("@(([\\u4E00-\\u9FA5]|[\\uFE30-\\uFFA0]|[a-zA-Z])+(|\\s|，|。|？|；|！|‘|’|“|”)+?)");
@@ -143,6 +144,7 @@ public class WeiboService {
                 content = content.replace(mt.group(),str);
             }
         }
+        content = SnsUtil.emojiReplace(content);
         return content;
     }
 

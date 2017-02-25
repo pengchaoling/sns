@@ -7,11 +7,16 @@ import com.pengchaoling.dao.CommentDAO;
 import com.pengchaoling.model.Comment;
 import com.pengchaoling.model.EntityType;
 import com.pengchaoling.model.HostHolder;
+import com.pengchaoling.model.UserInfo;
+import com.pengchaoling.util.SnsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.HtmlUtils;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Author: Lying
@@ -29,6 +34,8 @@ public class CommentService {
     EventProducer eventProducer;
     @Autowired
     HostHolder hostHolder;
+    @Autowired
+    UserInfoService userInfoService;
 
     public int addComment(Comment comment){
         //html过滤
@@ -48,13 +55,38 @@ public class CommentService {
     }
 
     public Comment getCommentById(int id){
-        return commentDAO.getCommentById(id);
+        //替换艾特
+        Comment comment = commentDAO.getCommentById(id);
+        comment.setContent(replaceAtme(comment.getContent()));
+        return comment;
     }
 
 
     public List<Comment>  selectCommentsByWid(int wid){
-        return commentDAO.selectCommentsByWid(wid);
+        List<Comment>  comments= commentDAO.selectCommentsByWid(wid);
+        List<Comment> news = new ArrayList<Comment>();
+        if(!comments.isEmpty()) {
+            for (Comment comment : comments) {
+                comment.setContent(replaceAtme(comment.getContent()));
+                news.add(comment);
+            }
+        }
+        return news;
     }
 
-
+    //辅助方法 提供给本类使用，替换@用户名 以及替换表情包
+    private String replaceAtme(String content){
+        //正则表达式匹配出所有AT用户
+        Pattern pt = Pattern.compile("@(([\\u4E00-\\u9FA5]|[\\uFE30-\\uFFA0]|[a-zA-Z])+(|\\s|，|。|？|；|！|‘|’|“|”)+?)");
+        Matcher mt = pt.matcher(content);
+        while (mt.find()) {
+            UserInfo userInfo = userInfoService.getUserInfoByNickname(mt.group().replace("@",""));
+            if(userInfo != null){
+                String str = "<a href='/profile/"+userInfo.getUid()+"'>"+mt.group()+"</a>";
+                content = content.replace(mt.group(),str);
+            }
+        }
+        content = SnsUtil.emojiReplace(content);
+        return content;
+    }
 }
