@@ -54,7 +54,7 @@ public class LikeController {
                 eventProducer.fireEvent(new EventModel(EventType.LIKE)
                         .setActorId(hostHolder.getUser().getId()).setEntityId(wid)
                         .setEntityType(EntityType.ENTITY_WEIBO).setEntityOwnerId(weibo.getUid())
-                        .setExt("weibo", String.valueOf(weibo.getContent())));
+                        .setExt("content", String.valueOf(weibo.getContent())));
                 //点赞
                 return SnsUtil.getJSONString(1, String.valueOf(likeCount));
             }else{

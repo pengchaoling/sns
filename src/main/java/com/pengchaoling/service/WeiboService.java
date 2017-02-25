@@ -51,8 +51,9 @@ public class WeiboService {
         weibo.setContent(sensitiveService.filter(weibo.getContent()));
         int res = weiboDAO.addWeibo(weibo);
         if(res>0) {
+            EventType eventType = weibo.getIsturn() > 0 ? EventType.TURNWEIBO : EventType.ADDWEIBO;
             //提交到异步事件队列去处理
-            eventProducer.fireEvent(new EventModel(EventType.ADDWEIBO)
+            eventProducer.fireEvent(new EventModel(eventType)
                     .setActorId(hostHolder.getUser().getId()).setEntityId(weibo.getId())
                     .setEntityType(EntityType.ENTITY_WEIBO).setEntityOwnerId(weibo.getUid())
                     .setExt("content", String.valueOf(weibo.getContent())));
