@@ -39,7 +39,7 @@ public class SensitiveService implements InitializingBean {
         /**
          * key下一个字符，value是对应的节点
          */
-        private Map<Character, TrieNode> subNodes = new HashMap<>();
+        private Map<Character, TrieNode> subNodes = new HashMap<Character, TrieNode>();
 
         /**
          * 向指定位置添加节点树
@@ -186,10 +186,4 @@ public class SensitiveService implements InitializingBean {
         }
     }
 
-    public static void main(String[] argv) {
-        SensitiveService s = new SensitiveService();
-        s.addWord("色情");
-        s.addWord("好色");
-        System.out.print(s.filter("你好X色**情XX"));
-    }
 }

@@ -22,6 +22,75 @@ public class SnsUtil {
     public static int SYSTEM_USERID = 3;
 
     /**
+     * 时间线分页
+     * @param count 总数
+     * @param p 当前页
+     * @param pageSize 每页尺寸
+     * @return
+     */
+    public static String linePage(long count,int p,int pageSize,String url,String pathParam){
+        int lastPage = (int)count/pageSize;
+        int firstPage = 1;
+        int nowPage = p;
+        int prePage = p-1;      //上一页
+        int nextPage = p+1;      //下一页
+        int totalPage =(int)count/pageSize;     //总页数
+        String info = "共" + count+"条记录，"+ p + "/" + totalPage + "页";
+
+        //第一页，最后一页样式
+        String first,last;
+        if(nowPage!=firstPage&&totalPage>1){
+            first = "&nbsp;<a href='"+url+pathParam+"="+firstPage+"'>首页</a>&nbsp;";
+        }else{
+            first = "";
+        }
+
+        if(nowPage!=lastPage&&totalPage>1){
+            last = "&nbsp;<a href='"+url+pathParam+"="+lastPage+"'>尾页</a>";
+        }else {
+            last = "";
+        }
+
+        //上一页，下一页样式
+        String upPage,downPage;
+
+        if(nowPage>1&&nowPage<=totalPage){
+            upPage = "<a href='"+url+pathParam+"="+prePage+"'>上一页</a>";
+        }else{
+            upPage = "";
+        }
+        if(nowPage<totalPage&&nowPage>0){
+            downPage = "<a href='"+url+pathParam+"="+nextPage+"'>下一页</a>";
+        }else{
+            downPage="";
+        }
+
+        //1,2,3,4,5
+        String linkPage = "";
+        for(int i=1;i<=5;i++){
+
+            int  pageNum = (nowPage >= 3) ? (nowPage - 3 + i) : (nowPage - 1 + i);
+            if(pageNum!=nowPage){
+                if(pageNum<=totalPage&&pageNum>=firstPage){
+                    linkPage += "&nbsp;<a href='"+url+pathParam+"="+pageNum+"'>&nbsp;"+pageNum+"&nbsp;</a>";
+                }else {
+                    //没有那么多页
+                    break;
+                }
+            }else{
+                linkPage +=  "&nbsp;<span class='current'>"+pageNum+"</span>";
+            }
+        }
+
+        String result = info + first + upPage+ linkPage + downPage + last;
+
+
+        return result;
+
+    }
+
+
+    /**
      * 分页函数
      * @param page    传进来的PageInfo实例
      * @param url     传进来的url
@@ -52,7 +121,7 @@ public class SnsUtil {
         }
 
         if(nowPage!=lastPage&&totalPage>1){
-            last = "&nbsp;<a href='"+url+pathParam+"="+firstPage+"'>尾页</a>";
+            last = "&nbsp;<a href='"+url+pathParam+"="+lastPage+"'>尾页</a>";
         }else {
             last = "";
         }

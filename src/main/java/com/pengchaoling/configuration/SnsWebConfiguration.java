@@ -23,7 +23,7 @@ public class SnsWebConfiguration extends WebMvcConfigurerAdapter {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(passportInterceptor);
-        registry.addInterceptor(loginRequiredInterceptor).addPathPatterns("/index","/","userSetting");
+        registry.addInterceptor(loginRequiredInterceptor).addPathPatterns("/index","/","/userSetting","/profile","/square","/msg/*","/atme");
         super.addInterceptors(registry);
     }
 }

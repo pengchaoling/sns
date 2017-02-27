@@ -51,7 +51,13 @@ public class IndexController {
         List<FocusGroup> focusGroups = focusGroupService.selectFocusGroupsByUid(hostHolder.getUser().getId());
 
         //从redis取出当前登陆用户的 feed 时间线了其实
-        List<String> feedIds = jedisAdapter.lrange(RedisKeyUtil.getTimelineKey(hostHolder.getUser().getId()), 0, 15);
+        //分页
+        int start = 15*(p-1);
+        int offset = start+15;
+        long count = jedisAdapter.llen(RedisKeyUtil.getTimelineKey(hostHolder.getUser().getId()));
+        String pageStr = SnsUtil.linePage(count,p,15,"/","?p");
+        model.addAttribute("pageStr",pageStr);
+        List<String> feedIds = jedisAdapter.lrange(RedisKeyUtil.getTimelineKey(hostHolder.getUser().getId()), start, offset);
         List<Feed> feeds = new ArrayList<Feed>();
         //再从数据库里面读取出来
         for (String feedId : feedIds) {

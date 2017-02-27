@@ -1,13 +1,8 @@
 package com.pengchaoling.controller;
 
-import com.pengchaoling.model.FocusGroup;
 import com.pengchaoling.model.HostHolder;
-import com.pengchaoling.model.User;
 import com.pengchaoling.model.UserInfo;
 import com.pengchaoling.service.UserInfoService;
-import com.pengchaoling.util.SnsUtil;
-import com.sun.image.codec.jpeg.JPEGCodec;
-import com.sun.image.codec.jpeg.JPEGImageEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,15 +11,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
-import java.awt.image.BufferedImage;
-import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Author: Lying

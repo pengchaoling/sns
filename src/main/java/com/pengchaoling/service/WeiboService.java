@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.HtmlUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -71,37 +70,41 @@ public class WeiboService {
 
     public Weibo selectWeiboById(int id){
         Weibo weibo = weiboDAO.selectWeiBoById(id);
-        weibo.setContent(replaceAtme(weibo.getContent()));
+        if(weibo!=null)
+            weibo.setContent(replaceAtme(weibo.getContent()));
         return weibo;
     }
 
     public List<Weibo>  selectWeibos(){
         List<Weibo> weibos = weiboDAO.selectWeibos();
-        List<Weibo> news = new ArrayList<Weibo>();
         if(!weibos.isEmpty()){
-            for(Weibo weibo : weibos){
-                String content = replaceAtme(weibo.getContent());
-                weibo.setContent(content);
-                news.add(weibo);
+            for(int i=0;i<weibos.size();i++){
+                String content ="";
+                if(weibos.get(i)!=null){
+                    content = replaceAtme(weibos.get(i).getContent());
+                }
+                weibos.get(i).setContent(content);
             }
-        }
 
-        return news;
+        }
+        return weibos;
     }
 
     public List<Weibo> selectWeibosByUid(int uid){
 
         List<Weibo> weibos = weiboDAO.selectWeibosByUid(uid);
-        List<Weibo> news = new ArrayList<Weibo>();
         if(!weibos.isEmpty()){
-            for(Weibo weibo : weibos){
-                String content = replaceAtme(weibo.getContent());
-                weibo.setContent(content);
-                news.add(weibo);
+            for(int i=0;i<weibos.size();i++){
+                String content ="";
+                if(weibos.get(i)!=null){
+                     content = replaceAtme(weibos.get(i).getContent());
+                }
+                weibos.get(i).setContent(content);
             }
+
         }
 
-        return news;
+        return weibos;
     }
 
     public void IncTurn(int wid){

@@ -8,7 +8,7 @@
 	font:12px/1.125 Arial,Helvetica,sans-serif;_font-family:"SimSun";
 }
 body{
-	background:url(../images/body_bg.jpg) no-repeat fixed;
+	background:url(../Images/body_bg.jpg) no-repeat fixed;
 }
 ul, ol {
 	list-style: none;
@@ -54,7 +54,7 @@ input,textarea,select,button{
 	display: block;
 	width:16px;
 	height:16px;
-	background:url(../images/icon.png) no-repeat -75px -200px;
+	background:url(../Images/icon.png) no-repeat -75px -200px;
 	margin: 7px 10px;
 	cursor: pointer;
 }
@@ -80,7 +80,7 @@ input,textarea,select,button{
 }
 .icon{
 	display:inline-block;
-	background:url(../images/icon.png);
+	background:url(../Images/icon.png);
 }
 .icon-write{
 	width:15px;

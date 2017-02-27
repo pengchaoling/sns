@@ -57,7 +57,8 @@ public class CommentService {
     public Comment getCommentById(int id){
         //替换艾特
         Comment comment = commentDAO.getCommentById(id);
-        comment.setContent(replaceAtme(comment.getContent()));
+        if(comment!=null)
+            comment.setContent(replaceAtme(comment.getContent()));
         return comment;
     }
 
@@ -67,8 +68,10 @@ public class CommentService {
         List<Comment> news = new ArrayList<Comment>();
         if(!comments.isEmpty()) {
             for (Comment comment : comments) {
-                comment.setContent(replaceAtme(comment.getContent()));
-                news.add(comment);
+                if(comment!=null){
+                    comment.setContent(replaceAtme(comment.getContent()));
+                    news.add(comment);
+                }
             }
         }
         return news;

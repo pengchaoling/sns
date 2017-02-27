@@ -32,7 +32,7 @@ public class UploadFileController {
     @Autowired
     ResourceLoader resourceLoader;
 
-    private String fileRootPath = "E://upload/";        //文件根目录
+    private String fileRootPath = "C://upload/";        //文件根目录
 
     private String FacePath = fileRootPath + "face//";  //头像保存地址
 

@@ -83,6 +83,7 @@ public class UserController {
 
                 vos.add(vo);
             }
+
         }
         //是否已关注该用户
         boolean followed = followService.isFollower(hostHolder.getUser().getId(),EntityType.ENTITY_USER,uid);

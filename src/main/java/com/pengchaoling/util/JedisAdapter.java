@@ -111,7 +111,7 @@ public class JedisAdapter implements InitializingBean {
     }
 
     /**
-     *  求集合元素的个数
+     *  出队列
      */
     public List<String> brpop(int timeout, String key) {
         Jedis jedis = null;

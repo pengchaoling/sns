@@ -5,7 +5,7 @@
 
 	<groupId>com.pengchaoling</groupId>
 	<artifactId>sns</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1</version>
 	<packaging>jar</packaging>
 
 	<name>sns</name>
@@ -90,8 +90,22 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <encoding>UTF-8</encoding>
+                    <compilerArguments>
+                        <verbose/>
+                        <bootclasspath>D:\Program Files\Java\jdk1.8.0_20\jre\lib\rt.jar;D:\Program Files\Java\jdk1.8.0_20\jre\lib\jce.jar</bootclasspath>
+                    </compilerArguments>
+                </configuration>
+            </plugin>
+
 		</plugins>
 	</build>
-
 
 </project>

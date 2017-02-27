@@ -39,7 +39,7 @@
 #copy div{
 	height: 33px;
 	margin: 0 auto;
-	background: url(../images/bottom_logo.gif) no-repeat;
+	background: url(../Images/bottom_logo.gif) no-repeat;
 	padding: 10px 0;
 }
 #copy div p{
@@ -123,7 +123,7 @@
 #turn .turn_main .phiz{
 	width:15px;
 	height:15px;
-	background:url(../images/icon.png) no-repeat -250px 0px;
+	background:url(../Images/icon.png) no-repeat -250px 0px;
 	margin-top:3px;
 	cursor: pointer;
 	margin-right: 10px;
