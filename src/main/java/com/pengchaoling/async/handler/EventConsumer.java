@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Author: Lying
@@ -58,7 +60,7 @@ public class EventConsumer implements InitializingBean, ApplicationContextAware 
             }
         }
 
-        Thread thread = new Thread(new Runnable() {
+        Runnable run = new Runnable() {
             @Override
             public void run() {
                 //取队列
@@ -86,8 +88,24 @@ public class EventConsumer implements InitializingBean, ApplicationContextAware 
                     }
                 }
             }
-        });
-        thread.start();
+        };
+
+        //创建一个可重用固定线程数的线程池
+        ExecutorService pool = Executors.newCachedThreadPool();
+        Thread t1 = new Thread(run);
+        Thread t2 = new Thread(run);
+        Thread t3 = new Thread(run);
+        Thread t4 = new Thread(run);
+        Thread t5 = new Thread(run);
+        //将线程放入池中进行执行
+        pool.execute(t1);
+        pool.execute(t2);
+        pool.execute(t3);
+        pool.execute(t4);
+        pool.execute(t5);
+        //关闭线程池
+        pool.shutdown();
+        
     }
 
     @Override
