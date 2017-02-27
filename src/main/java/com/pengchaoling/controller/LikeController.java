@@ -45,6 +45,9 @@ public class LikeController {
 
         try{
             Weibo weibo = weiboService.selectWeiboById(wid);
+            //不能对自己的微博点赞
+            if(weibo.getUid()==hostHolder.getUser().getId())
+                return SnsUtil.getJSONString(-2);
 
 
             long likeCount = likeService.like(hostHolder.getUser().getId(), EntityType.ENTITY_WEIBO, wid);

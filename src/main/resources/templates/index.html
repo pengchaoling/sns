@@ -131,6 +131,45 @@
                                 </dd>
                                 #end
                             </dl>
+                            #if("$!vo.weiboTurn"!="")
+                            <div class="wb_turn" style="width:405px;">
+                                <dl>
+                                    <!--原作者-->
+                                    <dt class='turn_name'>
+                                        <a href="/profile/$!{vo.userTurn.uid}">@$!{vo.userTurn.nickname}</a>
+                                    </dt>
+                                    <!--原微博内容-->
+                                    <dd class='turn_cons'>
+                                        <p>$!{vo.weiboTurn.content}</p>
+                                    </dd>
+                                    <!--原微博图片-->
+
+                                    #if("$!vo.pictureTurn.max" != "")
+                                    <dd>
+                                        <div class='wb_img'>
+                                            <!--小图-->
+                                            <img src="/img/$!{vo.pictureTurn.mini}" class='mini_img'/>
+                                            <div class="img_tool hidden">
+                                                <ul>
+                                                    <li>
+                                                        <i class='icon icon-packup'></i>
+                                                        <span class='packup'>&nbsp;收起</span>
+                                                    </li>
+                                                    <li>|</li>
+                                                    <li>
+                                                        <i class='icon icon-bigpic'></i>
+                                                        <a href="/img/$!{vo.pictureTurn.max}" target='_blank'>&nbsp;查看大图</a>
+                                                    </li>
+                                                </ul>
+                                                <!--中图-->
+                                                <div class="img_info"><img src="/img/$!{vo.pictureTurn.medium}"/></div>
+                                            </div>
+                                        </div>
+                                    </dd>
+                                    #end
+                                </dl>
+                            </div>
+                            #end
                             <!--转发微博操作-->
                             <div class="turn_tool">
                                     <span class='send_time'>
@@ -149,7 +188,7 @@
                 $date.format('yyyy-MM-dd HH:mm:ss', $!{vo.feedTime})
                         </span>
                     <ul>
-                        #if($user.id == $vo.ownerInfo.uid)
+                        #if($user.id == $vo.userinfo.uid)
                         <li class='del-li hidden'><span class='del-weibo' wid='$!{vo.weibo.id}'>删除</span></li>
                         <li class='del-li hidden'>|</li>
                         #end
@@ -158,7 +197,7 @@
                             <div class='keep-up hidden'></div>
                         </li>
                         <li>|</li>
-                        <li><span class='turn' id='$!{vo.weibo.id}' tid='$!{vo.weibo.id}'>转发($!{vo.weibo.turn})</span></li>
+                        <li><span class='turn' id='$!{vo.weibo.id}' tid='$!{vo.weibo.isturn}'>转发($!{vo.weibo.turn})</span></li>
                         <li>|</li>
                         <li class='keep-wrap'>
                             <span class='keep' wid='$!{vo.weibo.id}'>收藏($!{vo.weibo.keep})</span>

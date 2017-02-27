@@ -94,22 +94,25 @@ public class FeedHandler implements EventHandler {
                 // 不支持的feed
                 return;
             }
-            feedService.addFeed(feed);
-            // 获得所有粉丝额，其实这里还没有完善 只获取一百多个目前，后面需要完善
-            List<Integer> followers = followService.getFollowers(EntityType.ENTITY_USER, model.getActorId(), Integer.MAX_VALUE);
-            //把自己也加进去，意思是自己发布东西也会插入到自己的时间线里面
-            followers.add(model.getActorId());
-            // 给所有粉丝推事件
-            for (int follower : followers) {
-                String timelineKey = RedisKeyUtil.getTimelineKey(follower);
-                jedisAdapter.lpush(timelineKey, String.valueOf(feed.getId()));
-                // 限制最长长度，如果timelineKey的长度过大，就删除后面的新鲜事
-                long len = jedisAdapter.llen(timelineKey);
-                if(len>100){
-                    //删除了后面10条，这样就不需要每次超过就删一条，效率高一点
-                    jedisAdapter.ltrim(timelineKey,0,10);
-                }
+            //如果插入成功才执行下面的
+            if(feedService.addFeed(feed)) {
 
+                // 获得所有粉丝额，其实这里还没有完善 只获取一百多个目前，后面需要完善
+                List<Integer> followers = followService.getFollowers(EntityType.ENTITY_USER, model.getActorId(), Integer.MAX_VALUE);
+                //把自己也加进去，意思是自己发布东西也会插入到自己的时间线里面
+                followers.add(model.getActorId());
+                // 给所有粉丝推事件
+                for (int follower : followers) {
+                    String timelineKey = RedisKeyUtil.getTimelineKey(follower);
+                    jedisAdapter.lpush(timelineKey, String.valueOf(feed.getId()));
+                    // 限制最长长度，如果timelineKey的长度过大，就删除后面的新鲜事
+                    long len = jedisAdapter.llen(timelineKey);
+                    if (len > 100) {
+                        //删除了后面10条，这样就不需要每次超过就删一条，效率高一点
+                        jedisAdapter.ltrim(timelineKey, 0, 10);
+                    }
+
+                }
             }
         }catch (Exception e){
             e.printStackTrace();

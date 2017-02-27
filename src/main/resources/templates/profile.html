@@ -68,9 +68,9 @@
             #else
                 <li class='full' style="position: relative;">
                     #if($!followed)
-                    <a class="unfollow" uid="$!{profile.uid}" href="javascript:;">取消关注</a>
+                    <a class="dounfollow" uid="$!{profile.uid}" href="javascript:;">取消关注</a>
                     #else
-                    <a class="follow" uid="$!{profile.uid}" href="javascript:;">关注</a>
+                    <a class="dofollow" uid="$!{profile.uid}" href="javascript:;">关注</a>
                     #end
                     <div class='follow-up hidden'></div>
                 </li>

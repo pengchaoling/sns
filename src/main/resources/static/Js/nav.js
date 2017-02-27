@@ -137,7 +137,7 @@ $(function () {
 /**
     *  关注用户
     */
-    $(document).on('click','.follow',function(e){
+    $(document).on('click','.dofollow',function(e){
 
         var uid = $(e.target).attr('uid');
         var followUp = $(e.target).next();
@@ -146,9 +146,9 @@ $(function () {
         $.post(followUrl, {uid : uid}, function (data) {
             if (data.status == 1) {
                 span.text("取消关注");
-                span.removeClass("follow");
+                span.removeClass("dofollow");
                 span.removeClass("add-fl");
-                span.addClass("unfollow");
+                span.addClass("dounfollow");
                 msg = '关注成功';
             }
 
@@ -168,7 +168,7 @@ $(function () {
 /**
     *  取消关注
     */
-    $(document).on('click','.unfollow',function(e){
+    $(document).on('click','.dounfollow',function(e){
         var uid = $(e.target).attr('uid');
         var followUp = $(e.target).next();
         var msg = '';
@@ -176,8 +176,8 @@ $(function () {
         $.post(unfollowUrl, {uid : uid}, function (data) {
             if (data.status == 1) {
                 span.text("关注");
-                span.removeClass("unfollow");
-                span.addClass("follow");
+                span.removeClass("dounfollow");
+                span.addClass("dofollow");
                 span.addClass("add-fl");
                 msg = '取消关注成功';
             }

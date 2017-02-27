@@ -51,7 +51,7 @@ public class CommentService {
                     .setExt("content", String.valueOf(comment.getContent())));
         }
 
-        return commentDAO.addComment(comment);
+        return res;
     }
 
     public Comment getCommentById(int id){

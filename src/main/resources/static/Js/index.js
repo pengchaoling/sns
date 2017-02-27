@@ -215,6 +215,10 @@ $(function () {
 				msg = '取消赞成功';
 			}
 
+            if (data.status == -2) {
+                msg = '不能赞自己';
+            }
+
 			if (data.status == 0) {
 				msg = '操作失败';
 			}
@@ -233,7 +237,6 @@ $(function () {
     *  关注用户
     */
     $(document).on('click','.follow',function(e){
-           alert(11);return;
         var uid = $(e.target).attr('uid');
         var followUp = $(e.target).next();
         var msg = '';

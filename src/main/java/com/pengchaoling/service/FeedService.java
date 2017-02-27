@@ -5,8 +5,6 @@ import com.pengchaoling.model.Feed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 /**
  * Author: Lying
  * Data: 2017-02-23
@@ -17,11 +15,10 @@ public class FeedService {
     @Autowired
     FeedDAO feedDAO;
 
-    public List<Feed> getUserFeeds(int maxId, List<Integer> uids, int count) {
-        return feedDAO.selectUserFeeds(maxId, uids, count);
-    }
-
     public boolean addFeed(Feed feed) {
+       //去重  检查是否已经存在了
+        Feed check = feedDAO.checkFeed(feed.getUid(),feed.getEvenType(),feed.getEntityType(),feed.getEntityId());
+        if(check != null) return false;
         feedDAO.addFeed(feed);
         return feed.getId() > 0;
     }

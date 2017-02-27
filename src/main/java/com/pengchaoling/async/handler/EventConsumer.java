@@ -105,7 +105,7 @@ public class EventConsumer implements InitializingBean, ApplicationContextAware 
         pool.execute(t5);
         //关闭线程池
         pool.shutdown();
-        
+
     }
 
     @Override

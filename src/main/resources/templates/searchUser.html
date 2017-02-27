@@ -66,9 +66,9 @@
                 </dl>
                 <dl class='list-right' style="cursor: pointer;">
                     #if($vo.followed)
-                    <dt class="unfollow"  uid='$!{vo.userinfo.uid}'>√&nbsp;已关注</dt>
+                    <dt class="dounfollow"  uid='$!{vo.userinfo.uid}'>√&nbsp;已关注</dt>
                     #else
-                    <dt class='add-fl follow' uid='$!{vo.userinfo.uid}'>+&nbsp;关注</dt>
+                    <dt class='add-fl dofollow' uid='$!{vo.userinfo.uid}'>+&nbsp;关注</dt>
                     #end
                     <div class='follow-up hidden'></div>
                 </dl>

@@ -6,8 +6,6 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
-import java.util.List;
-
 /**
  * Author: Lying
  * Data: 2017-02-23
@@ -26,7 +24,9 @@ public interface FeedDAO {
     @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where id=#{id}"})
     Feed getFeedById(int id);
 
-    List<Feed> selectUserFeeds(@Param("maxId") int maxId,
-                               @Param("uids") List<Integer> uids,
-                               @Param("count") int count);
+    @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where uid=#{uid} and event_type=#{eventType} and entity_type=#{entityType} and entity_id=#{entityId} limit 1"})
+    Feed checkFeed(@Param("uid") int uidd,
+                               @Param("eventType") int eventType,
+                               @Param("entityType") int entityType,
+                               @Param("entityId") int entityId);
 }

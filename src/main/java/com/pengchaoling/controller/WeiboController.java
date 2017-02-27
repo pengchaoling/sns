@@ -95,12 +95,12 @@ public class WeiboController {
     @RequestMapping(value="/addComment",method={RequestMethod.POST})
     @ResponseBody
     public String addComment(@RequestParam("content") String content,
-                             @RequestParam("uid") int uid,
                              @RequestParam("wid") int wid,
                              @RequestParam(value="isturn",required = false) int isturn){
         String str="";
         try{
 
+            int uid = hostHolder.getUser().getId();
             Comment comment = new Comment();
             comment.setContent(content);
             comment.setUid(uid);
@@ -151,9 +151,9 @@ public class WeiboController {
                 if (!userInfo.getFace50().isEmpty()) {
                     str += userInfo.getFace50()+"'";
                 } else {
-                    str += "../Images/noface.gif";
+                    str += "../Images/noface.gif'";
                 }
-                str += " alt='" + userInfo.getNickname() + "' width='30' height='30'/>";
+                str += "  alt='" + userInfo.getNickname() + "' width='30' height='30'/>";
                 str += "</a></dt><dd>";
                 str += "<a href=/profile/"+uid+ " class='comment_name'>";
                 str += userInfo.getNickname() + "</a>：" + HtmlUtils.htmlEscape(content);
@@ -201,7 +201,7 @@ public class WeiboController {
                     if (!userInfo.getFace50().isEmpty()) {
                         str += userInfo.getFace50()+"'";
                     } else {
-                        str += "../Images/noface.gif";
+                        str += "../Images/noface.gif'";
                     }
                     str += " alt='" + userInfo.getNickname() + "' width='30' height='30'/>";
                     str += "</a></dt><dd>";
